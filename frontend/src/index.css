@@ -1,0 +1,112 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-display: "Inter", system-ui, sans-serif;
+
+  /* Beautiful pink aesthetic palette */
+  --color-primary: #d4567a;
+  --color-primary-dark: #b8405f;
+  --color-background-light: #fef6f8;
+  --color-background-dark: #2d1b21;
+  --color-pastel-taupe: #fce8ed;
+  --color-accent-purple: #c77d9e;
+  --color-accent-pink: #e89bb5;
+  --color-accent-green: #d4567a;
+  --color-soft-olive: #f5d5e0;
+  
+  /* Override slate colors with aesthetic pink tones */
+  --color-slate-50: #fef6f8;
+  --color-slate-100: #fce8ed;
+  --color-slate-200: #f5d5e0;
+  --color-slate-300: #e8b4c5;
+  --color-slate-400: #d99aaf;
+  --color-slate-500: #c77d9e;
+  --color-slate-600: #b8405f;
+  --color-slate-700: #8f3349;
+  --color-slate-800: #5d2232;
+  --color-slate-900: #2d1b21;
+  
+  /* Override gray colors */
+  --color-gray-50: #fef6f8;
+  --color-gray-100: #fce8ed;
+  --color-gray-200: #f5d5e0;
+  --color-gray-300: #e8b4c5;
+  --color-gray-400: #d99aaf;
+  --color-gray-500: #c77d9e;
+  --color-gray-600: #b8405f;
+  --color-gray-700: #8f3349;
+  --color-gray-800: #5d2232;
+  --color-gray-900: #2d1b21;
+  
+  /* Override white and black */
+  --color-white: #ffffff;
+  --color-black: #2d1b21;
+
+  --radius-DEFAULT: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
+}
+
+
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background-light dark:bg-slate-900 antialiased transition-colors duration-300;
+    font-family: "Inter", system-ui, sans-serif;
+    color: #2d1b21;
+  }
+
+  .dark body {
+    color: #f5d5e0;
+  }
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.fill-icon {
+  font-variation-settings: 'FILL' 1;
+}
+
+/* Product card hover quick-add */
+.product-card:hover .quick-add {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quick-add {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+/* Glass panel */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 86, 122, 0.15);
+}
+
+/* Status dots */
+.status-dot-low { background-color: #e89bb5; }
+.status-dot-medium { background-color: #d4567a; }
+.status-dot-high { background-color: #b8405f; }
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #d4567a44; border-radius: 10px; }
