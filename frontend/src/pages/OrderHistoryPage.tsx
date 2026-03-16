@@ -260,35 +260,6 @@ export const OrderHistoryPage: React.FC = () => {
               </div>
             </div>
           </main>
-
-          {/* Footer Small */}
-          <footer className="mt-auto border-t border-primary/10 px-6 md:px-20 lg:px-40 py-8 text-center md:text-left">
-            <div className="max-w-[960px] mx-auto flex flex-col md:flex-row justify-between gap-4">
-              <p className="text-sm text-slate-400">
-                © 2023 Dermora Skincare. All rights reserved.
-              </p>
-              <div className="flex gap-6 justify-center">
-                <Link
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Terms
-                </Link>
-                <Link
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Privacy
-                </Link>
-                <Link
-                  className="text-sm text-slate-400 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Help Center
-                </Link>
-              </div>
-            </div>
-          </footer>
         </div>
       </div>
     </div>

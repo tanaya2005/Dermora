@@ -154,24 +154,6 @@ export default function ProductDetails() {
           </div>
         </section>
       </main>
-
-      {/* Footer */}
-      <footer className="mt-24 border-t border-primary/10 bg-white py-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <span className="material-symbols-outlined text-primary text-2xl">flare</span>
-            <h1 className="text-lg font-bold tracking-tight uppercase">Dermora</h1>
-          </div>
-          <p className="text-sm text-slate-500 mb-8 max-w-md mx-auto">Science-backed skincare for everyone. Cruelty-free, vegan, and formulated with clinical precision.</p>
-          <div className="flex justify-center gap-6 text-xs font-bold uppercase tracking-widest text-slate-400 mb-8">
-            <a className="hover:text-primary transition-colors" href="#">Privacy</a>
-            <a className="hover:text-primary transition-colors" href="#">Terms</a>
-            <a className="hover:text-primary transition-colors" href="#">Contact</a>
-            <a className="hover:text-primary transition-colors" href="#">Wholesale</a>
-          </div>
-          <p className="text-[10px] text-slate-400">© 2024 Dermora Clinical Skincare. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

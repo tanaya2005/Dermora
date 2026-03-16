@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const SubscriptionsPage: React.FC = () => {
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-black min-h-screen">
+    <div className="bg-transparent dark:bg-transparent font-display text-slate-900 dark:text-black min-h-screen">
       <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
         <div className="layout-container flex h-full grow flex-col">
           {/* Top Navigation Bar */}
@@ -68,7 +68,7 @@ export const SubscriptionsPage: React.FC = () => {
               {/* Main Dashboard Content */}
               <div className="lg:col-span-9 flex flex-col gap-8">
                 {/* Hero Section: Subscription Summary */}
-                <section className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-800 shadow-sm border border-primary/5 p-6 md:p-8">
+                <section className="relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-primary/5 p-6 md:p-8">
                   <div className="absolute top-0 right-0 -mt-10 -mr-10 size-40 bg-primary/5 rounded-full blur-3xl"></div>
                   <div className="relative z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -223,35 +223,6 @@ export const SubscriptionsPage: React.FC = () => {
               </div>
             </div>
           </main>
-
-          {/* Footer-like space */}
-          <footer className="py-10 px-6 border-t border-primary/5 bg-white dark:bg-background-dark/50 mt-12">
-            <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                © 2024 Dermora Skincare. All rights reserved.
-              </p>
-              <div className="flex gap-6">
-                <Link
-                  className="text-sm text-slate-500 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Help Center
-                </Link>
-                <Link
-                  className="text-sm text-slate-500 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Privacy Policy
-                </Link>
-                <Link
-                  className="text-sm text-slate-500 hover:text-primary transition-colors"
-                  to="#"
-                >
-                  Terms of Service
-                </Link>
-              </div>
-            </div>
-          </footer>
         </div>
       </div>
     </div>

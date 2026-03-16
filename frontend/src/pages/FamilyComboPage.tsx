@@ -164,8 +164,6 @@ export const FamilyComboPage: React.FC = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

@@ -302,8 +302,6 @@ export const ProductDetailsPage: React.FC = () => {
           </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };

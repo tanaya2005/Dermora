@@ -25,8 +25,7 @@ function StarRating({ rating }: { rating: number }) {
 
 export default function Products() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-white overflow-x-hidden">
-      
+    <div className="w-full">
       <main className="max-w-7xl mx-auto w-full px-6 md:px-10 py-8 flex flex-col md:flex-row gap-8">
         {/* Sidebar */}
         <aside className="w-full md:w-64 shrink-0">
@@ -155,7 +154,6 @@ export default function Products() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

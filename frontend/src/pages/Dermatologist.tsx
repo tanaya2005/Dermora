@@ -177,37 +177,6 @@ export default function Dermatologist() {
           </div>
         </div>
       </main>
-
-      <footer className="mt-auto border-t border-primary/10 bg-white py-10 px-6">
-        <div className="max-w-[1200px] mx-auto grid md:grid-cols-4 gap-8">
-          <div className="col-span-2">
-            <div className="flex items-center gap-3 text-primary mb-4">
-              <div className="size-6"><DermoraLogo /></div>
-              <h2 className="text-slate-900 text-lg font-bold">Dermora</h2>
-            </div>
-            <p className="text-slate-500 text-sm max-w-sm">Empowering your skin health journey through professional expertise and specialized care.</p>
-          </div>
-          <div>
-            <h5 className="font-bold mb-4 text-slate-800">Services</h5>
-            <ul className="space-y-2 text-sm text-slate-500">
-              {['Online Consultation','In-Clinic Booking','Skin Analysis','Dermora Rewards'].map(s => (
-                <li key={s}><a className="hover:text-primary" href="#">{s}</a></li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h5 className="font-bold mb-4 text-slate-800">Legal</h5>
-            <ul className="space-y-2 text-sm text-slate-500">
-              {['Privacy Policy','Terms of Service','Medical Disclosure','HIPAA Compliance'].map(s => (
-                <li key={s}><a className="hover:text-primary" href="#">{s}</a></li>
-              ))}
-            </ul>
-          </div>
-        </div>
-        <div className="max-w-[1200px] mx-auto mt-10 pt-6 border-t border-slate-200 text-center">
-          <p className="text-xs text-slate-400">© 2024 Dermora Medical Group. All rights reserved.</p>
-        </div>
-      </footer>
     </div>
   );
 }

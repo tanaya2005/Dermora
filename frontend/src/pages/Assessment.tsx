@@ -25,9 +25,7 @@ export default function Assessment() {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-white">
-      
-
+    <div className="bg-transparent w-full">
       <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-10">
         <div className="mb-10 text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-2">Skin Analysis</h1>
@@ -146,21 +144,6 @@ export default function Assessment() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-50 dark:bg-slate-800 border-t border-primary/10 dark:border-slate-700 py-10 px-6 md:px-20 mt-12 transition-colors duration-300">
-        <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2 text-primary">
-            <DermoraLogo className="size-6" />
-            <span className="font-bold text-slate-800 dark:text-white transition-colors duration-300">Dermora</span>
-          </div>
-          <div className="flex gap-8">
-            <a className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Privacy Policy</a>
-            <a className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Clinical Studies</a>
-            <a className="text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">Support</a>
-          </div>
-          <p className="text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">© 2024 Dermora Labs. AI-Powered Skin Analysis.</p>
-        </div>
-      </footer>
     </div>
   );
 }

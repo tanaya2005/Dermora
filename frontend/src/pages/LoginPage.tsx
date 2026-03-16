@@ -5,26 +5,9 @@ export const LoginPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   return (
-    <div className="bg-[#eee2df] font-display text-slate-900 overflow-x-hidden min-h-screen">
-      <div className="flex min-h-screen w-full flex-col lg:flex-row">
-        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-primary/10">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage:
-                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuD6pGceN0yMzgWmfxQkM1u9WHu0rOCUQAN5XFCQADbc0fbmFec43Wg7ws2yAyaRLJ7aheDFsTydSvXZ1D90bIp11xvT2z7WT4I1fBKond_DH_MujiMX3M5tyd7WRvZq5CHNiCaOrQT0yh6E6wyMmrm6aLJJbFxuEX7Dd3kGYgNuxt5BZjtAKZNZ1ACYSDrzLsTnncuFiHlkt4Z9Eqi5dzYCnfg_4bjVA7ygQLxCknvXrEG-MQbT0QMK0J9tEDX8hO9bGOOa3MDAaWM")',
-            }}
-          ></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent"></div>
-          <div className="relative z-10 flex flex-col justify-end p-20 text-white">
-            <h1 className="font-serif text-6xl mb-4 italic">Dermora</h1>
-            <p className="text-xl max-w-md font-light leading-relaxed">
-              "The science of soft skin starts with the purity of nature."
-            </p>
-          </div>
-        </div>
-        <div className="flex-1 flex justify-center p-6 lg:p-12 xl:p-24 overflow-y-auto">
-          <div className="w-full max-w-md bg-white dark:bg-background-dark rounded-xl shadow-2xl shadow-primary/10 p-8 lg:p-10 my-auto">
+    <div className="font-display text-slate-900 dark:text-white overflow-x-hidden min-h-screen">
+      <div className="flex min-h-screen w-full items-start justify-center pt-5 pb-7 p-6">
+        <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-xl border-[2px] border-slate-400 p-8 lg:p-10 shadow-[0_0_40px_rgba(180,140,175,0.45),0_0_80px_rgba(212,86,122,0.2),0_8px_32px_rgba(212,86,122,0.15)]">
             <div className="flex flex-col items-center mb-10">
               <div className="lg:hidden font-serif text-3xl text-primary mb-6">
                 Dermora
@@ -43,8 +26,8 @@ export const LoginPage: React.FC = () => {
                   Register
                 </button>
               </div>
-              <h2 className="text-2xl font-serif text-slate-900 dark:text-black text-center mb-2">
-                {activeTab === "login" ? "Welcome Back" : "Create Account"}
+              <h2 className="text-2xl font-serif font-bold text-slate-900 dark:text-black text-center mb-2">
+                {activeTab === "login" ? "Welcome Back!" : "Create Account"}
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
                 {activeTab === "login"
@@ -243,9 +226,15 @@ export const LoginPage: React.FC = () => {
                 </p>
               </div>
             )}
-          </div>
         </div>
       </div>
     </div>
   );
 };
+
+
+
+
+
+
+

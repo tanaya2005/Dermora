@@ -125,17 +125,6 @@ export default function OrderHistory() {
           </div>
         </div>
       </main>
-
-      <footer className="mt-auto border-t border-primary/10 px-6 md:px-20 py-8">
-        <div className="max-w-[960px] mx-auto flex flex-col md:flex-row justify-between gap-4">
-          <p className="text-sm text-slate-400">© 2024 Dermora Skincare. All rights reserved.</p>
-          <div className="flex gap-6 justify-center">
-            <a className="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Terms</a>
-            <a className="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Privacy</a>
-            <a className="text-sm text-slate-400 hover:text-primary transition-colors" href="#">Help Center</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

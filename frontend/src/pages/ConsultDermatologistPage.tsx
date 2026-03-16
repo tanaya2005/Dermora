@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export const ConsultDermatologistPage: React.FC = () => {
   return (
-    <div className="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-black min-h-screen">
+    <div className="w-full">
       <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
         <div className="layout-container flex h-full grow flex-col">
           {/* Header */}
@@ -338,92 +338,6 @@ export const ConsultDermatologistPage: React.FC = () => {
               </div>
             </div>
           </main>
-
-          {/* Footer */}
-          <footer className="mt-auto border-t border-primary/10 bg-white dark:bg-background-dark py-10 px-6">
-            <div className="max-w-[1200px] mx-auto grid md:grid-cols-4 gap-8">
-              <div className="col-span-2">
-                <div className="flex items-center gap-3 text-primary mb-4">
-                  <div className="size-6">
-                    <svg
-                      fill="currentColor"
-                      viewBox="0 0 48 48"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-                    </svg>
-                  </div>
-                  <h2 className="text-slate-900 dark:text-white text-lg font-bold">
-                    Dermora
-                  </h2>
-                </div>
-                <p className="text-slate-500 text-sm max-w-sm">
-                  Empowering your skin health journey through professional
-                  expertise and specialized care. Join over 10k+ satisfied
-                  patients today.
-                </p>
-              </div>
-              <div>
-                <h5 className="font-bold mb-4 text-slate-800 dark:text-slate-200">
-                  Services
-                </h5>
-                <ul className="space-y-2 text-sm text-slate-500">
-                  <li>
-                    <Link className="hover:text-primary" to="/consult">
-                      Online Consultation
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="/consult">
-                      In-Clinic Booking
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="/assessment">
-                      Skin Analysis
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="#">
-                      Dermora Rewards
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h5 className="font-bold mb-4 text-slate-800 dark:text-slate-200">
-                  Legal
-                </h5>
-                <ul className="space-y-2 text-sm text-slate-500">
-                  <li>
-                    <Link className="hover:text-primary" to="#">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="#">
-                      Terms of Service
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="#">
-                      Medical Disclosure
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="hover:text-primary" to="#">
-                      HIPAA Compliance
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="max-w-[1200px] mx-auto mt-10 pt-6 border-t border-black dark:border-slate-800 text-center">
-              <p className="text-xs text-slate-400">
-                © 2024 Dermora Medical Group. All rights reserved.
-              </p>
-            </div>
-          </footer>
         </div>
       </div>
     </div>

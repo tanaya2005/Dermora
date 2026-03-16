@@ -88,7 +88,7 @@ const products = [
 
 export const ProductListingPage: React.FC = () => {
   return (
-    <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-black">
+    <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden font-display text-slate-900 dark:text-black">
       <main className="max-w-7xl mx-auto w-full px-6 md:px-10 py-8 flex flex-col md:flex-row gap-8">
         <FilterSidebar />
         <div className="flex-1">
@@ -151,8 +151,6 @@ export const ProductListingPage: React.FC = () => {
           </div>
         </div>
       </main>
-
-      <Footer />
     </div>
   );
 };

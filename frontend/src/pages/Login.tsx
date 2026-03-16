@@ -5,13 +5,10 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row bg-pastel-taupe font-display overflow-x-hidden">
+    <div className="flex min-h-screen w-full flex-col lg:flex-row font-display overflow-x-hidden">
       {/* Left panel */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-primary/10">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url("https://lh3.googleusercontent.com/aida-public/AB6AXuD6pGceN0yMzgWmfxQkM1u9WHu0rOCUQAN5XFCQADbc0fbmFec43Wg7ws2yAyaRLJ7aheDFsTydSvXZ1D90bIp11xvT2z7WT4I1fBKond_DH_MujiMX3M5tyd7WRvZq5CHNiCaOrQT0yh6E6wyMmrm6aLJJbFxuEX7Dd3kGYgNuxt5BZjtAKZNZ1ACYSDrzLsTnncuFiHlkt4Z9Eqi5dzYCnfg_4bjVA7ygQLxCknvXrEG-MQbT0QMK0J9tEDX8hO9bGOOa3MDAaWM")` }}
-        />
+        
         <div className="absolute inset-0 bg-gradient-to-t from-primary/30 to-transparent" />
         <div className="relative z-10 flex flex-col justify-end p-20 text-white">
           <h1 className="font-serif text-6xl mb-4 italic">Dermora</h1>
@@ -23,7 +20,7 @@ export default function Login() {
 
       {/* Right panel */}
       <div className="flex-1 flex items-center justify-center p-6 lg:p-12 xl:p-24">
-        <div className="w-full max-w-md bg-white rounded-xl shadow-2xl shadow-primary/10 p-8 lg:p-10">
+        <div className="w-full max-w-md rounded-xl shadow-2xl shadow-primary/10 p-8 lg:p-10">
           <div className="flex flex-col items-center mb-10">
             <div className="lg:hidden font-serif text-3xl text-primary mb-6">Dermora</div>
             <div className="flex w-full border-b border-primary/10 mb-8">

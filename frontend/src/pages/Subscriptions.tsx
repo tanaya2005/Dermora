@@ -8,9 +8,7 @@ const routineProducts = [
 
 export default function Subscriptions() {
   return (
-    <div className="relative flex min-h-screen w-full flex-col bg-white overflow-x-hidden">
-      
-
+    <div className="bg-transparent overflow-x-hidden w-full">
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 md:px-10 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Sidebar */}
@@ -43,7 +41,7 @@ export default function Subscriptions() {
           {/* Main Content */}
           <div className="lg:col-span-9 flex flex-col gap-8">
             {/* Hero */}
-            <section className="relative overflow-hidden rounded-3xl bg-white shadow-sm border border-primary/5 p-6 md:p-8">
+            <section className="relative overflow-hidden rounded-2xl bg-white shadow-sm border border-primary/5 p-6 md:p-8">
               <div className="absolute top-0 right-0 -mt-10 -mr-10 size-40 bg-primary/5 rounded-full blur-3xl" />
               <div className="relative z-10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -122,17 +120,6 @@ export default function Subscriptions() {
           </div>
         </div>
       </main>
-
-      <footer className="py-10 px-6 border-t border-primary/5 bg-white">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-slate-500">© 2024 Dermora Skincare. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a className="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Help Center</a>
-            <a className="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Privacy Policy</a>
-            <a className="text-sm text-slate-500 hover:text-primary transition-colors" href="#">Terms of Service</a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
