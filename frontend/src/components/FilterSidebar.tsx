@@ -1,6 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 
-export const FilterSidebar: React.FC = () => {
+interface FilterSidebarProps {
+  onCategoryChange?: (category: string) => void;
+  onSearchChange?: (search: string) => void;
+}
+
+export const FilterSidebar: React.FC<FilterSidebarProps> = ({ 
+  onCategoryChange,
+  onSearchChange 
+}) => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const categories = [
+    'Cleansers',
+    'Moisturizers', 
+    'Serums',
+    'Sunscreen',
+    'Night Creams',
+    'Toners',
+    'Eye Care',
+    'Masks',
+    'Mists'
+  ];
+
+  const handleCategoryChange = (category: string) => {
+    const newCategory = selectedCategory === category ? '' : category;
+    setSelectedCategory(newCategory);
+    onCategoryChange?.(newCategory);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    onSearchChange?.(value);
+  };
+
   return (
     <aside className="w-full md:w-64 shrink-0">
       <div className="sticky top-28 flex flex-col gap-8">
@@ -12,6 +46,42 @@ export const FilterSidebar: React.FC = () => {
             Filters
           </h3>
           <div className="flex flex-col gap-6 custom-scrollbar">
+            {/* Search */}
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
+                Search
+              </p>
+              <input
+                type="text"
+                placeholder="Search products..."
+                className="w-full px-3 py-2 border border-primary/20 rounded-lg text-sm focus:ring-2 focus:ring-primary focus:border-transparent"
+                value={searchTerm}
+                onChange={(e) => handleSearchChange(e.target.value)}
+              />
+            </div>
+
+            {/* Categories */}
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
+                Category
+              </p>
+              <div className="flex flex-col gap-2">
+                {categories.map((category) => (
+                  <label key={category} className="flex items-center gap-2 text-sm cursor-pointer group">
+                    <input
+                      className="rounded border-primary/30 text-primary focus:ring-primary"
+                      type="checkbox"
+                      checked={selectedCategory === category}
+                      onChange={() => handleCategoryChange(category)}
+                    />
+                    <span className="group-hover:text-primary transition-colors">
+                      {category}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
             <div className="flex flex-col gap-3">
               <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
                 Skin Type
@@ -56,53 +126,7 @@ export const FilterSidebar: React.FC = () => {
                 </label>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
-              <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
-                Concerns
-              </p>
-              <div className="flex flex-col gap-2">
-                <label className="flex items-center gap-2 text-sm cursor-pointer group">
-                  <input
-                    className="rounded border-primary/30 text-primary focus:ring-primary"
-                    type="checkbox"
-                  />
-                  <span className="group-hover:text-primary transition-colors">
-                    Anti-Aging
-                  </span>
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer group">
-                  <input
-                    className="rounded border-primary/30 text-primary focus:ring-primary"
-                    type="checkbox"
-                  />
-                  <span className="group-hover:text-primary transition-colors">
-                    Acne & Blemishes
-                  </span>
-                </label>
-                <label className="flex items-center gap-2 text-sm cursor-pointer group">
-                  <input
-                    className="rounded border-primary/30 text-primary focus:ring-primary"
-                    type="checkbox"
-                  />
-                  <span className="group-hover:text-primary transition-colors">
-                    Hyperpigmentation
-                  </span>
-                </label>
-              </div>
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
-                Price Range
-              </p>
-              <input
-                className="w-full accent-primary bg-primary/20 rounded-lg h-1.5 cursor-pointer"
-                type="range"
-              />
-              <div className="flex justify-between text-xs font-medium text-slate-500">
-                <span>$0</span>
-                <span>$200+</span>
-              </div>
-            </div>
+            
             <div className="pt-4 border-t border-primary/10">
               <label className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 cursor-pointer group transition-all hover:bg-primary/10">
                 <input

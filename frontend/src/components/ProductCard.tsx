@@ -81,7 +81,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <p className="text-sm text-slate-500 mb-4">{description}</p>
         <div className="flex items-center justify-between">
           <span className="text-xl font-bold text-slate-900">
-            ${price.toFixed(2)}
+            ₹{price.toFixed(0)}
           </span>
           <span className="text-[10px] font-bold text-primary px-2 py-1 bg-primary/10 rounded uppercase">
             {size}

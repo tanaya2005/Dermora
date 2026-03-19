@@ -1,8 +1,54 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const { data, error } = await login(email, password);
+
+      if (error) {
+        setError(error.message || 'Login failed');
+        return;
+      }
+
+      // Role-based redirect after successful login
+      if (data?.user) {
+        const user = data.user;
+        switch (user.role) {
+          case 'ADMIN':
+            navigate('/admin');
+            break;
+          case 'SELLER':
+            navigate('/seller/dashboard');
+            break;
+          case 'BUYER':
+          default:
+            navigate('/');
+            break;
+        }
+      } else {
+        navigate('/');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col lg:flex-row font-display overflow-x-hidden">
@@ -31,13 +77,22 @@ export default function Login() {
             <p className="text-sm text-slate-500 text-center">Enter your credentials to access your skincare ritual.</p>
           </div>
 
-          <form className="space-y-5">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          <form className="space-y-5" onSubmit={handleSubmit}>
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Email Address</label>
               <input
                 className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
                 placeholder="hello@example.com"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
               />
             </div>
             <div>
@@ -50,6 +105,9 @@ export default function Login() {
                   className="w-full h-12 bg-background-light border-none rounded-lg px-4 pr-12 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
                   placeholder="••••••••"
                   type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
                 <button
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors"
@@ -60,8 +118,12 @@ export default function Login() {
                 </button>
               </div>
             </div>
-            <button className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98] mt-4">
-              Sign In
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98] mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Signing In...' : 'Sign In'}
             </button>
           </form>
 
