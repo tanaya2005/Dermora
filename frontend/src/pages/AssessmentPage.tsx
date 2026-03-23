@@ -211,7 +211,7 @@ export const AssessmentPage: React.FC = () => {
                       Removes excess oil without stripping moisture.
                     </p>
                     <div className="flex items-center justify-between mt-4">
-                      <span className="font-bold text-primary">$28.00</span>
+                      <span className="font-bold text-primary">₹28.00</span>
                       <button className="size-8 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-primary transition-colors">
                         <span className="material-symbols-outlined text-sm">
                           shopping_bag
@@ -239,7 +239,7 @@ export const AssessmentPage: React.FC = () => {
                       Targets fine lines and skin cell turnover.
                     </p>
                     <div className="flex items-center justify-between mt-4">
-                      <span className="font-bold text-primary">$42.00</span>
+                      <span className="font-bold text-primary">₹42.00</span>
                       <button className="size-8 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-primary transition-colors">
                         <span className="material-symbols-outlined text-sm">
                           shopping_bag
@@ -267,7 +267,7 @@ export const AssessmentPage: React.FC = () => {
                       Deeply repairs the skin barrier overnight.
                     </p>
                     <div className="flex items-center justify-between mt-4">
-                      <span className="font-bold text-primary">$34.00</span>
+                      <span className="font-bold text-primary">₹34.00</span>
                       <button className="size-8 rounded-full bg-slate-900 text-white flex items-center justify-center hover:bg-primary transition-colors">
                         <span className="material-symbols-outlined text-sm">
                           shopping_bag

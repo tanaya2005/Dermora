@@ -65,7 +65,7 @@ export const ProductDetailsPage: React.FC = () => {
             <h2 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-black mb-2">
               Advanced Hydration Serum
             </h2>
-            <p className="text-2xl text-primary font-semibold mb-6">$48.00</p>
+            <p className="text-2xl text-primary font-semibold mb-6">₹48.00</p>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-8 text-lg">
               A high-performance serum designed to deeply hydrate and revitalize
               skin using clinical-grade hyaluronic acid and potent botanical
@@ -89,7 +89,7 @@ export const ProductDetailsPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <span className="text-sm font-semibold">$48.00</span>
+                <span className="text-sm font-semibold">₹48.00</span>
               </label>
               <label className="relative flex cursor-pointer items-center justify-between rounded-lg border border-primary bg-primary/5 p-4 transition">
                 <div className="flex items-center gap-3">
@@ -107,7 +107,7 @@ export const ProductDetailsPage: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <span className="text-sm font-bold text-primary">$40.80</span>
+                <span className="text-sm font-bold text-primary">₹40.80</span>
               </label>
             </div>
 

@@ -54,6 +54,7 @@ export const signup = async (req, res, next) => {
       role: user.role,
       profileImage: user.profileImage,
       emailVerified: user.emailVerified,
+      skinProfile: user.skinProfile,
     };
 
     res.status(201).json({ user: userResponse, token });
@@ -99,6 +100,7 @@ export const login = async (req, res, next) => {
       role: user.role,
       profileImage: user.profileImage,
       emailVerified: user.emailVerified,
+      skinProfile: user.skinProfile,
     };
 
     res.json({ user: userResponse, token });

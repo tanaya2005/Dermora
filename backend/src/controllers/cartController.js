@@ -87,7 +87,7 @@ export const removeFromCart = async (req, res, next) => {
       return res.status(404).json({ error: 'Cart item not found' });
     }
 
-    if (cartItem.userId.toString() !== req.user.id) {
+    if (cartItem.userId.toString() !== req.user.id.toString()) {
       return res.status(403).json({ error: 'Not authorized' });
     }
 

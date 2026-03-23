@@ -23,7 +23,7 @@ export const createPaymentOrder = async (req, res, next) => {
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    if (order.buyerId.toString() !== req.user.id) {
+    if (order.buyerId.toString() !== req.user.id.toString()) {
       return res.status(403).json({ error: 'Not authorized' });
     }
 

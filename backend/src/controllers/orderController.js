@@ -116,3 +116,34 @@ export const getAllOrders = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Update order status (Admin only)
+ * PATCH /orders/admin/:id/status
+ */
+export const updateOrderStatus = async (req, res, next) => {
+  try {
+    const { status } = req.body;
+    const valid = ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
+    if (!status || !valid.includes(status)) {
+      return res.status(400).json({ error: `Invalid status. Must be one of: ${valid.join(', ')}` });
+    }
+
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    ).populate([
+      { path: 'buyerId', select: 'name email' },
+      { path: 'orderItems.productId', select: 'title imageUrl' },
+    ]);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    res.json({ order });
+  } catch (error) {
+    next(error);
+  }
+};

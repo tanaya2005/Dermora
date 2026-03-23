@@ -29,6 +29,7 @@ export const authenticate = async (req, res, next) => {
       role: user.role,
       profileImage: user.profileImage,
       emailVerified: user.emailVerified,
+      skinProfile: user.skinProfile,
     };
 
     next();

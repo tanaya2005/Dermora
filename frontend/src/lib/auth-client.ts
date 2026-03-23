@@ -11,6 +11,14 @@ export interface User {
   role: "ADMIN" | "SELLER" | "BUYER";
   profileImage?: string;
   emailVerified: boolean;
+  skinProfile?: {
+    skinType?: string;
+    skinConcerns?: string[];
+    budget?: string;
+    preferredCategories?: string[];
+    assessmentCompleted: boolean;
+    completedAt?: string;
+  };
 }
 
 export interface AuthResponse {

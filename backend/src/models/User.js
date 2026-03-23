@@ -27,6 +27,46 @@ const userSchema = new mongoose.Schema({
     default: 'BUYER',
   },
   profileImage: String,
+  // Skin Assessment Data
+  skinProfile: {
+    skinType: {
+      type: String,
+      enum: ['dry', 'oily', 'combination', 'sensitive'],
+    },
+    skinConcerns: [{
+      type: String,
+      enum: ['acne', 'aging', 'pigmentation', 'texture', 'redness'],
+    }],
+    budget: {
+      type: String,
+      enum: ['under-1000', '1000-3000', '3000-5000', 'above-5000'],
+    },
+    preferredCategories: [{
+      type: String,
+      enum: ['cleanser', 'moisturizer', 'serum', 'sunscreen', 'treatment', 'mask'],
+    }],
+    assessmentCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    completedAt: Date,
+  },
+  // Subscription Data
+  subscription: {
+    plan: {
+      type: String,
+      enum: ['none', 'individual', 'couple', 'family'],
+      default: 'none',
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    startDate: Date,
+    endDate: Date,
+    razorpayPaymentId: String,
+    razorpayOrderId: String,
+  },
 }, {
   timestamps: true,
 });

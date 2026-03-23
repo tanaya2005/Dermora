@@ -5,21 +5,21 @@ const orders = [
     id: 'DM-98231', date: 'Oct 14, 2023', status: 'Delivered',
     statusClass: 'bg-soft-olive text-accent-green', statusIcon: 'check_circle',
     name: 'The Glow Kit Bundle', desc: 'Includes: Vitamin C Serum, Hyaluronic Acid, Face Oil',
-    price: '$124.00', feedbackSent: false,
+    price: '₹124.00', feedbackSent: false,
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDJX1MvkhOFBbFkSik8VqNaAYLE-UNz_hq_QPKN8s_PxBKz3L9RtcDSEyW8fq0oR-XPKTkV81zJXpYHVEi7Lui6VByEpm2yRdyHeAEHaZKANXzrigr6g9NR19fqaa_QzSVtyho1sG',
   },
   {
     id: 'DM-99042', date: 'Nov 02, 2023', status: 'In Transit',
     statusClass: 'bg-primary/10 text-primary', statusIcon: 'local_shipping',
     name: 'Deep Hydration Overnight Cream', desc: 'Quantity: 2 x 50ml',
-    price: '$78.00', feedbackSent: false, delivery: 'Nov 08, 2023', progress: '65%',
+    price: '₹78.00', feedbackSent: false, delivery: 'Nov 08, 2023', progress: '65%',
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC-czFQDQ8BkT0vco4oouyE-WhN_AKk91TdpnOt27xztKo--dPOwHEVHScKu3Phex1mdbs5XQq84MNqOHzaEdM7xkPvDyIzIGSNsqeS3GSvrkrF8EwOblTvyFYcqEtgvRNaU2cJjEuhiuMh7xST25fdbq8Hx6LX1FNqDv4Fdpw0-u2mE_eiHFVY1RSbGi3hDYJf8x3AdynT8eNQfHWBZ8ovvtt3p58Exm1F2DQLG8g148OY4XMcGA4qiv4hh1nJVt6NMLZ1a-JppPc',
   },
   {
     id: 'DM-94109', date: 'Sep 12, 2023', status: 'Delivered',
     statusClass: 'bg-soft-olive text-accent-green', statusIcon: 'check_circle',
     name: 'Pore Purifying Mask', desc: 'Size: 100g Standard',
-    price: '$42.00', feedbackSent: true,
+    price: '₹42.00', feedbackSent: true,
     img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAfRgEj25AwwhL50pzUXi5VvU-PfXSDkk0N43L9UaocW3rkzvmFkNlO3_3m1yAUDEd6brghO0QT1xmyn5nty5WdQ8pjYl9cbAKdK7-pQ_k2t1k7Y8KQru600F04WWHO5s1H4KM9nDwbD-l57TkqCIJ0OqtKvUPJa3tcDrUzVCkiFJ_Yq7oqsE_4gFGhRmnBDeWj_T3W6HPmX-ZH9RLshrZpIfnRXPpuUMwB58Kd5RNzbU2iX3JGBEXcfvm4RP5KQvfsJh6waLA_1sA',
   },
 ];
@@ -73,7 +73,7 @@ export default function OrderHistory() {
                     </div>
                   </div>
                   <div className="flex gap-4">
-                    <div className="size-20 rounded-lg flex-shrink-0 bg-cover bg-center bg-primary/5" style={{ backgroundImage: `url('${order.img}')` }} />
+                    <div className="size-20 rounded-lg flex-shrink-0 bg-cover bg-center bg-primary/5" style={{ backgroundImage: `url('₹{order.img}')` }} />
                     <div className="flex flex-1 flex-col justify-center">
                       <h4 className="font-bold text-slate-900">{order.name}</h4>
                       <p className="text-sm text-slate-500">{order.desc}</p>

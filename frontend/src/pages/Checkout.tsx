@@ -112,7 +112,7 @@ export default function Checkout() {
             </section>
 
             <button className="bg-primary text-white font-bold py-4 rounded-xl text-lg hover:bg-primary/90 shadow-lg shadow-primary/20">
-              Complete Order ($117.00)
+              Complete Order (₹117.00)
             </button>
           </div>
 
@@ -122,11 +122,11 @@ export default function Checkout() {
               <h3 className="text-xl font-bold mb-6">Order Summary</h3>
               <div className="flex flex-col gap-4 mb-6">
                 {[
-                  { name: 'Revitalizing Face Serum', size: '30ml / Glass Bottle', qty: 1, price: '$45.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEbYM3FO0ANZDe_lmXCZwPMAeX6UUMxiEEengCSC8voRU2w3NSvgtNV9V9p68_K45wQA3zwuYQn9-_AwPdJ5-2Hmv1rvAvGAFMjgl39RCl2OPey3-kTSnTPHSzNIRYiraFUS5m6n7fIpIl44QYctqxFTcLQny5VyweoD0QcglXWe6Euwh4sQ5hc1uLajWerWQGDQJJc8K3nMDHHFzeCJrJfv-I-refYcr5orzfxlu5YNq1RMbmos-LLjB_vfXDDb-GzvMIGaq017I' },
-                  { name: 'Hydrating Cleanser', size: '200ml / Pump Bottle', qty: 2, price: '$72.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxPg_hAsXgXdwmF27bNoINRTTXiQKneI9M3t7-0Au4G9YDhO95GGed-fZkFHcHjzIpB6XmmkxoWIUd-8yxhIIsoz6PUJFKrF1bL1--s6AeCZvB7B8m_CFl8PXBferXM6uWrnik12hHSKTRJ1co6KsqtMldRys4It3v45qbMPSbMqgAnoKoulkvSwoetkBoFMlXj5Onwf7bzYlSvdjneKsinQdcseb5yzF13cb7XdvNAtMa9q8zmQsLqbNOCDJ_UfDbSWUYsWQgtJ0' },
+                  { name: 'Revitalizing Face Serum', size: '30ml / Glass Bottle', qty: 1, price: '₹45.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEbYM3FO0ANZDe_lmXCZwPMAeX6UUMxiEEengCSC8voRU2w3NSvgtNV9V9p68_K45wQA3zwuYQn9-_AwPdJ5-2Hmv1rvAvGAFMjgl39RCl2OPey3-kTSnTPHSzNIRYiraFUS5m6n7fIpIl44QYctqxFTcLQny5VyweoD0QcglXWe6Euwh4sQ5hc1uLajWerWQGDQJJc8K3nMDHHFzeCJrJfv-I-refYcr5orzfxlu5YNq1RMbmos-LLjB_vfXDDb-GzvMIGaq017I' },
+                  { name: 'Hydrating Cleanser', size: '200ml / Pump Bottle', qty: 2, price: '₹72.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBxPg_hAsXgXdwmF27bNoINRTTXiQKneI9M3t7-0Au4G9YDhO95GGed-fZkFHcHjzIpB6XmmkxoWIUd-8yxhIIsoz6PUJFKrF1bL1--s6AeCZvB7B8m_CFl8PXBferXM6uWrnik12hHSKTRJ1co6KsqtMldRys4It3v45qbMPSbMqgAnoKoulkvSwoetkBoFMlXj5Onwf7bzYlSvdjneKsinQdcseb5yzF13cb7XdvNAtMa9q8zmQsLqbNOCDJ_UfDbSWUYsWQgtJ0' },
                 ].map(item => (
                   <div key={item.name} className="flex gap-4">
-                    <div className="size-20 rounded-lg bg-center bg-cover flex-shrink-0" style={{ backgroundImage: `url('${item.img}')` }} />
+                    <div className="size-20 rounded-lg bg-center bg-cover flex-shrink-0" style={{ backgroundImage: `url('₹{item.img}')` }} />
                     <div className="flex flex-col justify-between flex-1">
                       <div>
                         <p className="font-bold text-slate-900">{item.name}</p>
@@ -166,13 +166,13 @@ export default function Checkout() {
               {/* Totals */}
               <div className="flex flex-col gap-3 border-t border-primary/10 pt-6">
                 <div className="flex justify-between text-slate-600">
-                  <span>Subtotal</span><span>$117.00</span>
+                  <span>Subtotal</span><span>₹117.00</span>
                 </div>
                 <div className="flex justify-between text-slate-600">
                   <span>Shipping</span><span className="text-green-600 font-medium">Free</span>
                 </div>
                 <div className="flex justify-between text-xl font-black pt-2 text-slate-900 border-t border-primary/10">
-                  <span>Total</span><span>$117.00</span>
+                  <span>Total</span><span>₹117.00</span>
                 </div>
               </div>
             </div>

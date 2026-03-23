@@ -59,7 +59,7 @@ export default function ProductDetails() {
               <span className="text-xs font-medium text-slate-500 uppercase tracking-widest">124 Reviews</span>
             </div>
             <h2 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">Advanced Hydration Serum</h2>
-            <p className="text-2xl text-primary font-semibold mb-6">$48.00</p>
+            <p className="text-2xl text-primary font-semibold mb-6">₹48.00</p>
             <p className="text-slate-600 leading-relaxed mb-8 text-lg">
               A high-performance serum designed to deeply hydrate and revitalize skin using clinical-grade hyaluronic acid and potent botanical extracts. Formulated for instant absorption and 24-hour moisture retention.
             </p>
@@ -71,7 +71,7 @@ export default function ProductDetails() {
                   <input checked={purchaseOption==='once'} onChange={() => setPurchaseOption('once')} className="h-4 w-4 border-primary text-primary focus:ring-primary" name="purchase_option" type="radio" />
                   <span className="block text-sm font-bold">One-time purchase</span>
                 </div>
-                <span className="text-sm font-semibold">$48.00</span>
+                <span className="text-sm font-semibold">₹48.00</span>
               </label>
               <label className="relative flex cursor-pointer items-center justify-between rounded-lg border border-primary bg-primary/5 p-4 transition">
                 <div className="flex items-center gap-3">
@@ -81,7 +81,7 @@ export default function ProductDetails() {
                     <span className="block text-xs text-slate-500">Deliver every 30 days. Cancel anytime.</span>
                   </div>
                 </div>
-                <span className="text-sm font-bold text-primary">$40.80</span>
+                <span className="text-sm font-bold text-primary">₹40.80</span>
               </label>
             </div>
 

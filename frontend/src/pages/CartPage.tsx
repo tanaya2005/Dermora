@@ -1,59 +1,101 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 type CartItem = {
-  id: number;
-  name: string;
-  subtitle: string;
-  price: number;
-  size: string;
-  qty: number;
-  img: string;
+  _id: string;
+  productId: {
+    _id: string;
+    id: string;
+    title: string;
+    price: number;
+    imageUrl: string;
+    stock: number;
+  };
+  quantity: number;
 };
-
-const initialItems: CartItem[] = [
-  {
-    id: 1,
-    name: 'Hyaluronic Radiance Serum',
-    subtitle: 'Deep hydration for glowing skin',
-    price: 64.0,
-    size: '30ml',
-    qty: 1,
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCthtV7EGAbCv3I6VI4zQgd7RdM_6jnCTqKQoBLSC0pRnEQA3BBE9Lr0jvndTbWlP5XP8bqDN8Y0c7A80ER7RHMQM8ghSsS0yGJFROxyKy6y9hMKhSXk_MnWyb8WhtzMTkYhFpG9pBjNqkwtbh3nrMlv9jrik9eudLf0_kggNVXGJPtuaLVl2RIp8Tnbv8FqKTPd0OdDVusXQInDDj-jY9vq1PIIs7xWBNonJ5o5CZdbo1odtHJ5p8GIAnz7Jb6gbxjOQFcslvUOv0',
-  },
-  {
-    id: 2,
-    name: 'Bakuchiol Night Elixir',
-    subtitle: 'Plant-based retinol alternative',
-    price: 72.0,
-    size: '15ml',
-    qty: 1,
-    img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAfRgEj25AwwhL50pzUXi5VvU-PfXSDkk0N43L9UaocW3rkzvmFkNlO3_3m1yAUDEd6brghO0QT1xmyn5nty5WdQ8pjYl9cbAKdK7-pQ_k2t1k7Y8KQru600F04WWHO5s1H4KM9nDwbD-l57TkqCIJ0OqtKvUPJa3tcDrUzVCkiFJ_Yq7oqsE_4gFGhRmnBDeWj_T3W6HPmX-ZH9RLshrZpIfnRXPpuUMwB58Kd5RNzbU2iX3JGBEXcfvm4RP5KQvfsJh6waLA_1sA',
-  },
-];
 
 // Card style: white in light, dark-slate in dark — text flips accordingly
 const cardCls = 'bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-2xl shadow-sm';
 
 export const CartPage: React.FC = () => {
-  const [items, setItems] = useState<CartItem[]>(initialItems);
+  const { apiRequest } = useAuth();
+  const navigate = useNavigate();
+  
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [selectedItemIds, setSelectedItemIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
   const [promo, setPromo] = useState('');
   const [promoApplied, setPromoApplied] = useState(false);
 
-  const updateQty = (id: number, delta: number) => {
-    setItems(prev =>
-      prev
-        .map(item => item.id === id ? { ...item, qty: item.qty + delta } : item)
-        .filter(item => item.qty > 0)
+  useEffect(() => {
+    fetchCart();
+  }, []);
+
+  const fetchCart = async () => {
+    try {
+      setLoading(true);
+      const data = await apiRequest('/api/cart');
+      setItems(data.cartItems || []);
+      // Auto-select all by default
+      setSelectedItemIds((data.cartItems || []).map((i: CartItem) => i._id));
+    } catch (error) {
+      console.error('Failed to fetch cart', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const removeItem = async (cartItemId: string) => {
+    try {
+      await apiRequest(`/api/cart/${cartItemId}`, { method: 'DELETE' });
+      setItems(prev => prev.filter(item => item._id !== cartItemId));
+      setSelectedItemIds(prev => prev.filter(id => id !== cartItemId));
+    } catch (error) {
+      console.error('Failed to remove item', error);
+    }
+  };
+
+  const toggleSelect = (cartItemId: string) => {
+    setSelectedItemIds(prev => 
+      prev.includes(cartItemId) ? prev.filter(id => id !== cartItemId) : [...prev, cartItemId]
     );
   };
 
-  const removeItem = (id: number) => setItems(prev => prev.filter(item => item.id !== id));
+  const saveToWishlist = async (cartItemId: string, productId: string) => {
+    try {
+      await apiRequest('/api/wishlist/add', {
+        method: 'POST',
+        body: JSON.stringify({ productId })
+      });
+      // Also remove from cart
+      await removeItem(cartItemId);
+      alert('Saved to wishlist and removed from cart!');
+    } catch (error: any) {
+      alert(error.message || 'Failed to save to wishlist');
+    }
+  };
 
-  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  const selectedItems = items.filter(i => selectedItemIds.includes(i._id));
+  const subtotal = selectedItems.reduce((sum, i) => sum + (i.productId?.price || 0) * i.quantity, 0);
   const discount = promoApplied ? subtotal * 0.1 : 0;
   const tax = (subtotal - discount) * 0.08;
   const total = subtotal - discount + tax;
+
+  const handleCheckout = () => {
+    if (selectedItems.length === 0) return;
+    
+    // Pass selected items to checkout
+    navigate('/checkout', { state: { selectedItems, subtotal, total, discount, tax } });
+  };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <span className="material-symbols-outlined animate-spin text-primary text-4xl">refresh</span>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
@@ -97,48 +139,45 @@ export const CartPage: React.FC = () => {
             {/* ── Cart Items ── */}
             <div className="lg:col-span-2 flex flex-col gap-4">
               {items.map(item => (
-                <div key={item.id} className={`flex gap-5 p-5 hover:shadow-md transition-shadow ${cardCls}`}>
+                <div key={item._id} className={`flex items-center gap-4 p-5 hover:shadow-md transition-shadow ${cardCls}`}>
+                  
+                  {/* Select Checkbox */}
+                  <input 
+                    type="checkbox" 
+                    checked={selectedItemIds.includes(item._id)}
+                    onChange={() => toggleSelect(item._id)}
+                    className="w-5 h-5 rounded border-primary/30 text-primary focus:ring-primary/40 cursor-pointer"
+                  />
+
                   {/* Product image */}
                   <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100 dark:bg-slate-300">
-                    <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                    <img src={item.productId?.imageUrl} alt={item.productId?.title} className="w-full h-full object-cover" />
                   </div>
 
                   <div className="flex-1 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
                       <div>
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded mb-1 inline-block">
-                          {item.size}
-                        </span>
                         {/* Dark card → white text; light card → dark text */}
-                        <h3 className="font-bold text-slate-900 dark:text-white">{item.name}</h3>
-                        <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5">{item.subtitle}</p>
+                        <h3 className="font-bold text-slate-900 dark:text-white">{item.productId?.title}</h3>
                       </div>
-                      <p className="font-bold text-slate-900 dark:text-white">${(item.price * item.qty).toFixed(2)}</p>
+                      <p className="font-bold text-slate-900 dark:text-white">₹{((item.productId?.price || 0) * item.quantity).toFixed(2)}</p>
                     </div>
 
                     <div className="flex items-center justify-between mt-3">
-                      {/* Qty control */}
-                      <div className="flex items-center border border-slate-200 dark:border-slate-500 rounded-lg overflow-hidden">
-                        <button
-                          onClick={() => updateQty(item.id, -1)}
-                          className="px-3 py-1.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors font-bold"
-                        >−</button>
-                        <span className="px-4 py-1.5 font-semibold text-sm text-slate-900 dark:text-white border-x border-slate-200 dark:border-slate-500">
-                          {item.qty}
-                        </span>
-                        <button
-                          onClick={() => updateQty(item.id, 1)}
-                          className="px-3 py-1.5 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors font-bold"
-                        >+</button>
+                      <div className="flex items-center border border-slate-200 dark:border-slate-500 rounded-lg overflow-hidden px-4 py-1.5 font-semibold text-sm text-slate-900 dark:text-white">
+                        Qty: {item.quantity}
                       </div>
 
                       <div className="flex items-center gap-4">
-                        <button className="text-xs text-slate-400 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-1">
+                        <button 
+                          onClick={() => saveToWishlist(item._id, item.productId._id)}
+                          className="text-xs text-slate-400 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors flex items-center gap-1"
+                        >
                           <span className="material-symbols-outlined text-sm">favorite_border</span>
                           Save
                         </button>
                         <button
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeItem(item._id)}
                           className="text-xs text-rose-400 hover:text-rose-500 transition-colors flex items-center gap-1"
                         >
                           <span className="material-symbols-outlined text-sm">delete_outline</span>
@@ -188,12 +227,12 @@ export const CartPage: React.FC = () => {
                 <div className="space-y-3 text-sm mb-6">
                   <div className="flex justify-between text-slate-600 dark:text-slate-300">
                     <span>Subtotal</span>
-                    <span className="font-semibold text-slate-900 dark:text-white">${subtotal.toFixed(2)}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">₹{subtotal.toFixed(2)}</span>
                   </div>
-                  {promoApplied && (
+                  {promoApplied && discount > 0 && (
                     <div className="flex justify-between text-emerald-500">
                       <span>Promo (10%)</span>
-                      <span className="font-semibold">-${discount.toFixed(2)}</span>
+                      <span className="font-semibold">-₹{discount.toFixed(2)}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-slate-600 dark:text-slate-300">
@@ -202,20 +241,21 @@ export const CartPage: React.FC = () => {
                   </div>
                   <div className="flex justify-between text-slate-600 dark:text-slate-300">
                     <span>Tax (8%)</span>
-                    <span className="font-semibold text-slate-900 dark:text-white">${tax.toFixed(2)}</span>
+                    <span className="font-semibold text-slate-900 dark:text-white">₹{tax.toFixed(2)}</span>
                   </div>
                   <div className="pt-4 border-t border-slate-200 dark:border-slate-500 flex justify-between">
                     <span className="font-bold text-slate-900 dark:text-white">Total</span>
-                    <span className="font-bold text-primary text-lg">${total.toFixed(2)}</span>
+                    <span className="font-bold text-primary text-lg">₹{total.toFixed(2)}</span>
                   </div>
                 </div>
 
-                <Link
-                  to="/checkout"
-                  className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-center block hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 text-sm"
+                <button
+                  onClick={handleCheckout}
+                  disabled={selectedItems.length === 0}
+                  className="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-center block hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity shadow-lg shadow-primary/20 text-sm"
                 >
                   Proceed to Checkout
-                </Link>
+                </button>
                 <Link
                   to="/products"
                   className="w-full mt-3 border border-primary/30 dark:border-primary/40 text-primary py-3 rounded-xl font-semibold text-center block hover:bg-primary/5 transition-colors text-sm"

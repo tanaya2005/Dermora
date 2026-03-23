@@ -23,7 +23,9 @@ export const Navbar: React.FC = () => {
           <nav className="hidden lg:flex items-center gap-8">
             <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/products">Shop All</Link>
             <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/assessment">Skin Quiz</Link>
-            <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/subscriptions">Subscriptions</Link>
+            <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/recommendations">My Recommendations</Link>
+            <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/bundles">Plans</Link>
+            <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/subscriptions">My Plan</Link>
             <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/consult">Consult</Link>
             {user?.role === 'SELLER' && (
               <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/seller/dashboard">My Store</Link>

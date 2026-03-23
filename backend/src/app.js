@@ -10,6 +10,10 @@ import productRoutes from './routes/productRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import assessmentRoutes from './routes/assessmentRoutes.js';
+import recommendationRoutes from './routes/recommendationRoutes.js';
+import wishlistRoutes from './routes/wishlistRoutes.js';
+import subscriptionRoutes from './routes/subscriptionRoutes.js';
 
 const app = express();
 
@@ -40,6 +44,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/assessment', assessmentRoutes);
+app.use('/api/recommendations', recommendationRoutes);
+app.use('/api/wishlist', wishlistRoutes);
+app.use('/api/subscription', subscriptionRoutes);
 
 // 404 handler
 app.use(notFound);

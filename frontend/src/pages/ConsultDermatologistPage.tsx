@@ -298,7 +298,7 @@ export const ConsultDermatologistPage: React.FC = () => {
                           Ceramides + Hyaluronic
                         </p>
                         <p className="text-primary font-bold mt-1 text-sm">
-                          $24.00
+                          ₹24.00
                         </p>
                       </div>
                       <button className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all">
@@ -324,7 +324,7 @@ export const ConsultDermatologistPage: React.FC = () => {
                           Zinc Oxide, Non-Greasy
                         </p>
                         <p className="text-primary font-bold mt-1 text-sm">
-                          $32.00
+                          ₹32.00
                         </p>
                       </div>
                       <button className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center hover:bg-primary hover:text-white transition-all">

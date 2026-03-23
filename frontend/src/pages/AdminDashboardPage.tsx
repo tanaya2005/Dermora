@@ -37,10 +37,10 @@ export const AdminDashboardPage: React.FC = () => {
                 </Link>
                 <Link
                   className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-all"
-                  to="#"
+                  to="/admin/orders"
                 >
-                  <span className="material-symbols-outlined">group</span>
-                  <span className="text-sm font-medium">Customers</span>
+                  <span className="material-symbols-outlined">receipt_long</span>
+                  <span className="text-sm font-medium">Orders</span>
                 </Link>
               </nav>
             </div>
@@ -124,7 +124,7 @@ export const AdminDashboardPage: React.FC = () => {
                   Total Revenue
                 </p>
                 <p className="text-2xl font-bold mt-1 text-slate-900 dark:text-black">
-                  $128,430.00
+                  ₹128,430.00
                 </p>
               </div>
               <div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
@@ -195,7 +195,7 @@ export const AdminDashboardPage: React.FC = () => {
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-black text-primary">$42,000</p>
+                    <p className="text-2xl font-black text-primary">₹42,000</p>
                     <p className="text-xs text-emerald-600 font-bold">
                       +8.4% vs last month
                     </p>
@@ -415,10 +415,10 @@ export const AdminDashboardPage: React.FC = () => {
                       <td className="px-6 py-4 text-sm font-mono text-slate-500">
                         DERM-9283
                       </td>
-                      <td className="px-6 py-4 text-sm">$84.00</td>
+                      <td className="px-6 py-4 text-sm">₹84.00</td>
                       <td className="px-6 py-4 text-sm">842</td>
                       <td className="px-6 py-4 text-sm font-bold text-right">
-                        $70,728.00
+                        ₹70,728.00
                       </td>
                     </tr>
                     <tr className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
@@ -440,10 +440,10 @@ export const AdminDashboardPage: React.FC = () => {
                       <td className="px-6 py-4 text-sm font-mono text-slate-500">
                         DERM-1024
                       </td>
-                      <td className="px-6 py-4 text-sm">$38.00</td>
+                      <td className="px-6 py-4 text-sm">₹38.00</td>
                       <td className="px-6 py-4 text-sm">756</td>
                       <td className="px-6 py-4 text-sm font-bold text-right">
-                        $28,728.00
+                        ₹28,728.00
                       </td>
                     </tr>
                     <tr className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
@@ -465,10 +465,10 @@ export const AdminDashboardPage: React.FC = () => {
                       <td className="px-6 py-4 text-sm font-mono text-slate-500">
                         DERM-4421
                       </td>
-                      <td className="px-6 py-4 text-sm">$56.00</td>
+                      <td className="px-6 py-4 text-sm">₹56.00</td>
                       <td className="px-6 py-4 text-sm">520</td>
                       <td className="px-6 py-4 text-sm font-bold text-right">
-                        $29,120.00
+                        ₹29,120.00
                       </td>
                     </tr>
                   </tbody>

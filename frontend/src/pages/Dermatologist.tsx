@@ -20,8 +20,8 @@ const doctors = [
 ];
 
 const recProducts = [
-  { name: 'Hydrating Cleanser', sub: 'Ceramides + Hyaluronic', price: '$24.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCXTRwTMT9y0K4C1FCUHgvDFbw3qz9ANmb5AP_qyD5JoZrUBpKGvhtDGU55fNiwJUyQOxUOCAgsYGYQnHjqY-igqs9IvLBUkSwydZkMce6mzlaDJWgUKiTYGw5-KqmVbf1jXfEyQoV1e0qFyoiO2bI_4C_fYqysE6rApECtQSVnb-BAc_n5Q8ziDRLld6CGtcx25PwiKfSQ1GOfmUhS-aixRNTtlvrFYm0GowdAx9bAHyrCgOF5azOlITvhKs7BE5ky7gLeMsZcb0U' },
-  { name: 'Mineral Sunscreen SPF 50', sub: 'Zinc Oxide, Non-Greasy', price: '$32.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAajxqa4kRxwyWlS4XASZAj3YGjtVR0C4rERZ8TPsuMAkEYziUZ7zi-GIxUY4udrTp-_JSajzh8vMNc7bWdRQUBrrJiBnhCzxF0GxiPLwZaen79ghyx_mLpHW8-X21oYbCy_DHwOFHDtMIOVCYoutYL6W-p1L2rX3YwdEre9AmqN3bNXgo7nbym1tCVhOo1Zrv3jAn2GNOLPzasgtmr1rbn1LZoEyjoVzIQ-2jTlm_o3mAsoCM4LJoHQ5wcJVTlbmlv0VNWhREKTPg' },
+  { name: 'Hydrating Cleanser', sub: 'Ceramides + Hyaluronic', price: '₹24.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCXTRwTMT9y0K4C1FCUHgvDFbw3qz9ANmb5AP_qyD5JoZrUBpKGvhtDGU55fNiwJUyQOxUOCAgsYGYQnHjqY-igqs9IvLBUkSwydZkMce6mzlaDJWgUKiTYGw5-KqmVbf1jXfEyQoV1e0qFyoiO2bI_4C_fYqysE6rApECtQSVnb-BAc_n5Q8ziDRLld6CGtcx25PwiKfSQ1GOfmUhS-aixRNTtlvrFYm0GowdAx9bAHyrCgOF5azOlITvhKs7BE5ky7gLeMsZcb0U' },
+  { name: 'Mineral Sunscreen SPF 50', sub: 'Zinc Oxide, Non-Greasy', price: '₹32.00', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAajxqa4kRxwyWlS4XASZAj3YGjtVR0C4rERZ8TPsuMAkEYziUZ7zi-GIxUY4udrTp-_JSajzh8vMNc7bWdRQUBrrJiBnhCzxF0GxiPLwZaen79ghyx_mLpHW8-X21oYbCy_DHwOFHDtMIOVCYoutYL6W-p1L2rX3YwdEre9AmqN3bNXgo7nbym1tCVhOo1Zrv3jAn2GNOLPzasgtmr1rbn1LZoEyjoVzIQ-2jTlm_o3mAsoCM4LJoHQ5wcJVTlbmlv0VNWhREKTPg' },
 ];
 
 const timeSlots = ['09:00 AM', '10:30 AM', '01:45 PM', '03:30 PM'];

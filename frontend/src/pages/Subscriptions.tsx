@@ -34,7 +34,7 @@ export default function Subscriptions() {
               <div className="relative w-full h-3 bg-primary/10 rounded-full overflow-hidden mb-2">
                 <div className="absolute top-0 left-0 h-full bg-primary rounded-full" style={{ width: '75%' }} />
               </div>
-              <p className="text-xs text-slate-500 leading-relaxed">750 / 1000 points. 250 more to unlock $15 reward.</p>
+              <p className="text-xs text-slate-500 leading-relaxed">750 / 1000 points. 250 more to unlock ₹15 reward.</p>
             </div>
           </aside>
 
@@ -57,7 +57,7 @@ export default function Subscriptions() {
                       </div>
                       <div className="flex items-center gap-1.5 text-slate-600">
                         <span className="material-symbols-outlined text-sm">payments</span>
-                        <span className="text-sm font-medium">$45.00/month</span>
+                        <span className="text-sm font-medium">₹45.00/month</span>
                       </div>
                     </div>
                   </div>

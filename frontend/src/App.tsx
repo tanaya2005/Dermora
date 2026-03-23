@@ -6,18 +6,22 @@ import Products from './pages/Products';
 import SellerDashboard from './pages/SellerDashboard';
 import Dashboard from './pages/Dashboard';
 import { AssessmentPage } from './pages/AssessmentPage';
+import Assessment from './pages/Assessment';
+import RecommendationsPage from './pages/RecommendationsPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { ProductDetailsPage } from './pages/ProductDetailsPage';
 import { SubscriptionsPage } from './pages/SubscriptionsPage';
 import { OrderHistoryPage } from './pages/OrderHistoryPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { InventoryManagementPage } from './pages/InventoryManagementPage';
+import { AdminOrdersPage } from './pages/AdminOrdersPage';
 import { CartPage } from './pages/CartPage';
 import { MyListPage } from './pages/MyListPage';
 import { ConsultDermatologistPage } from './pages/ConsultDermatologistPage';
 import { FamilyComboPage } from './pages/FamilyComboPage';
 import Home from './pages/Home';
 import { ThemeProvider } from './ThemeContext';
+import { AuthProvider } from './AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -48,67 +52,72 @@ const PublicLayout: React.FC = () => (
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <Routes>
-          {/* ══════════════════════════════════════════════════════════
-              SELLER PORTAL — Dedicated layout (sidebar + topbar)
-              Accessible at /seller, /seller/dashboard, /seller/products etc.
-          ══════════════════════════════════════════════════════════ */}
-          <Route
-            path="/seller"
-            element={
-              <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
-                <SellerLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<SellerDashboardOverview />} />
-            <Route path="dashboard" element={<SellerDashboardOverview />} />
-            <Route path="products" element={<SellerProductsPage />} />
-            <Route path="products/add" element={<SellerProductForm isEdit={false} />} />
-            <Route path="products/edit/:id" element={<SellerProductForm isEdit={true} />} />
-            <Route path="orders" element={<SellerOrdersPage />} />
-            <Route path="analytics" element={<SellerAnalyticsPage />} />
-            <Route path="profile" element={<SellerProfilePage />} />
-          </Route>
-
-          {/* ══════════════════════════════════════════════════════════
-              PUBLIC SITE — Shared layout with global Navbar + Footer
-          ══════════════════════════════════════════════════════════ */}
-          <Route element={<PublicLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/products/:id" element={<ProductDetailsPage />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/assessment" element={<AssessmentPage />} />
-            <Route path="/subscriptions" element={<SubscriptionsPage />} />
-            <Route path="/bundles" element={<FamilyComboPage />} />
-            <Route path="/consult" element={<ConsultDermatologistPage />} />
-
-            {/* Protected buyer routes */}
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
-            <Route path="/mylist" element={<ProtectedRoute><MyListPage /></ProtectedRoute>} />
-            <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
-            <Route path="/orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
-
-            {/* Legacy seller route (old SellerDashboard page — still accessible) */}
+      <AuthProvider>
+        <Router>
+          <Routes>
+            {/* ══════════════════════════════════════════════════════════
+                SELLER PORTAL — Dedicated layout (sidebar + topbar)
+                Accessible at /seller, /seller/dashboard, /seller/products etc.
+            ══════════════════════════════════════════════════════════ */}
             <Route
-              path="/seller/dashboard-legacy"
+              path="/seller"
               element={
                 <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
-                  <SellerDashboard />
+                  <SellerLayout />
                 </ProtectedRoute>
               }
-            />
+            >
+              <Route index element={<SellerDashboardOverview />} />
+              <Route path="dashboard" element={<SellerDashboardOverview />} />
+              <Route path="products" element={<SellerProductsPage />} />
+              <Route path="products/add" element={<SellerProductForm isEdit={false} />} />
+              <Route path="products/edit/:id" element={<SellerProductForm isEdit={true} />} />
+              <Route path="orders" element={<SellerOrdersPage />} />
+              <Route path="analytics" element={<SellerAnalyticsPage />} />
+              <Route path="profile" element={<SellerProfilePage />} />
+            </Route>
 
-            {/* Admin routes */}
-            <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
-            <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['ADMIN']}><InventoryManagementPage /></ProtectedRoute>} />
-          </Route>
-        </Routes>
-      </Router>
+            {/* ══════════════════════════════════════════════════════════
+                PUBLIC SITE — Shared layout with global Navbar + Footer
+            ══════════════════════════════════════════════════════════ */}
+            <Route element={<PublicLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/products/:id" element={<ProductDetailsPage />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/assessment" element={<Assessment />} />
+              <Route path="/recommendations" element={<ProtectedRoute><RecommendationsPage /></ProtectedRoute>} />
+              <Route path="/subscriptions" element={<SubscriptionsPage />} />
+              <Route path="/bundles" element={<FamilyComboPage />} />
+              <Route path="/plans" element={<FamilyComboPage />} />
+              <Route path="/consult" element={<ConsultDermatologistPage />} />
+
+              {/* Protected buyer routes */}
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/cart" element={<ProtectedRoute><CartPage /></ProtectedRoute>} />
+              <Route path="/mylist" element={<ProtectedRoute><MyListPage /></ProtectedRoute>} />
+              <Route path="/checkout" element={<ProtectedRoute><CheckoutPage /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute><OrderHistoryPage /></ProtectedRoute>} />
+
+              {/* Legacy seller route (old SellerDashboard page — still accessible) */}
+              <Route
+                path="/seller/dashboard-legacy"
+                element={
+                  <ProtectedRoute allowedRoles={['SELLER', 'ADMIN']}>
+                    <SellerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Admin routes */}
+              <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
+              <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['ADMIN']}><InventoryManagementPage /></ProtectedRoute>} />
+              <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminOrdersPage /></ProtectedRoute>} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

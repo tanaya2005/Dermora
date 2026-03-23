@@ -103,7 +103,7 @@ export const updateProduct = async (req, res, next) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    if (product.sellerId.toString() !== req.user.id && req.user.role !== 'ADMIN') {
+    if (product.sellerId.toString() !== req.user.id.toString() && req.user.role !== 'ADMIN') {
       return res.status(403).json({ error: 'Not authorized to update this product' });
     }
 
@@ -129,7 +129,7 @@ export const deleteProduct = async (req, res, next) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
-    if (product.sellerId.toString() !== req.user.id && req.user.role !== 'ADMIN') {
+    if (product.sellerId.toString() !== req.user.id.toString() && req.user.role !== 'ADMIN') {
       return res.status(403).json({ error: 'Not authorized to delete this product' });
     }
 
@@ -140,3 +140,31 @@ export const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Admin: Update product stock directly
+ * PATCH /products/admin/:id/stock
+ */
+export const updateProductStock = async (req, res, next) => {
+  try {
+    const { stock } = req.body;
+    if (stock === undefined || isNaN(Number(stock)) || Number(stock) < 0) {
+      return res.status(400).json({ error: 'Valid stock value required (>= 0)' });
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { stock: Number(stock) },
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+
+    res.json({ product });
+  } catch (error) {
+    next(error);
+  }
+};
+
