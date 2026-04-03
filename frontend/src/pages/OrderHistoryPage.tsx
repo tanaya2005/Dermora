@@ -131,8 +131,8 @@ export const OrderHistoryPage: React.FC = () => {
                             </p>
                           </div>
                           <button className="w-full md:w-auto border border-primary text-primary px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/10 transition-all flex items-center justify-center gap-1">
-                            <span className="material-symbols-outlined text-sm">local_shipping</span>
-                            Track Delivery
+                            {/* <span className="material-symbols-outlined text-sm">local_shipping</span> */}
+                            Reorder
                           </button>
                         </div>
                       )}

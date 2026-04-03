@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ProductCard } from '../components/ProductCard';
+import { FilterSidebar } from '../components/FilterSidebar';
 
 interface Product {
   _id: string;
@@ -10,6 +11,8 @@ interface Product {
   price: number;
   imageUrl?: string;
   stock: number;
+  category: string;
+  ageGroup: string;
   sellerId: {
     name: string;
     email: string;
@@ -25,15 +28,53 @@ interface SkinProfile {
 
 export default function RecommendationsPage() {
   const [recommendations, setRecommendations] = useState<Product[]>([]);
+  const [filteredRecommendations, setFilteredRecommendations] = useState<Product[]>([]);
   const [skinProfile, setSkinProfile] = useState<SkinProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [filters, setFilters] = useState({
+    category: '',
+    search: '',
+    ageGroup: ''
+  });
   
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchRecommendations();
   }, [navigate]);
+
+  useEffect(() => {
+    applyFilters();
+  }, [recommendations, filters]);
+
+  const applyFilters = () => {
+    let filtered = [...recommendations];
+
+    // Apply category filter
+    if (filters.category) {
+      filtered = filtered.filter(product => 
+        product.category.toLowerCase().includes(filters.category.toLowerCase())
+      );
+    }
+
+    // Apply search filter
+    if (filters.search) {
+      filtered = filtered.filter(product =>
+        product.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        product.description.toLowerCase().includes(filters.search.toLowerCase())
+      );
+    }
+
+    // Apply age group filter
+    if (filters.ageGroup) {
+      filtered = filtered.filter(product => 
+        product.ageGroup === filters.ageGroup || product.ageGroup === 'all-ages'
+      );
+    }
+
+    setFilteredRecommendations(filtered);
+  };
 
   const fetchRecommendations = async () => {
     try {
@@ -55,6 +96,7 @@ export default function RecommendationsPage() {
 
       setRecommendations(data.recommendations);
       setSkinProfile(data.skinProfile);
+      setFilteredRecommendations(data.recommendations);
     } catch (err: any) {
       setError(err.message || 'An error occurred while fetching recommendations');
     } finally {
@@ -64,6 +106,18 @@ export default function RecommendationsPage() {
 
   const retakeAssessment = () => {
     navigate('/assessment');
+  };
+
+  const handleCategoryFilter = (category: string) => {
+    setFilters(prev => ({ ...prev, category }));
+  };
+
+  const handleSearchFilter = (search: string) => {
+    setFilters(prev => ({ ...prev, search }));
+  };
+
+  const handleAgeGroupFilter = (ageGroup: string) => {
+    setFilters(prev => ({ ...prev, ageGroup }));
   };
 
   if (loading) {
@@ -123,7 +177,9 @@ export default function RecommendationsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-slate-50 rounded-lg">
                 <h3 className="font-semibold text-slate-700 mb-1">Skin Type</h3>
-                <p className="text-primary font-bold capitalize">{skinProfile.skinType}</p>
+                <p className="text-primary font-bold capitalize">
+                  {skinProfile.skinType === 'baby' ? 'Baby/Infant' : skinProfile.skinType}
+                </p>
               </div>
               <div className="text-center p-4 bg-slate-50 rounded-lg">
                 <h3 className="font-semibold text-slate-700 mb-1">Main Concerns</h3>
@@ -146,45 +202,80 @@ export default function RecommendationsPage() {
 
         {/* Recommendations */}
         {recommendations.length > 0 ? (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Recommended Products ({recommendations.length})
-              </h2>
-              <Link 
-                to="/products"
-                className="text-primary hover:underline font-medium"
-              >
-                Browse All Products →
-              </Link>
-            </div>
+          <div className="flex gap-8">
+            {/* Filter Sidebar */}
+            <FilterSidebar 
+              onCategoryChange={handleCategoryFilter}
+              onSearchChange={handleSearchFilter}
+              onAgeGroupChange={handleAgeGroupFilter}
+            />
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {recommendations.map((product) => (
-                <div key={product._id} className="relative">
-                  <Link to={`/products/${product._id}`}>
-                    <ProductCard
-                      id={product._id}
-                      name={product.title}
-                      description={product.description}
-                      price={product.price}
-                      size="50ml"
-                      rating={4.5}
-                      reviews={0}
-                      image={product.imageUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&q=80'}
-                      recommended={true}
-                      newArrival={false}
-                    />
-                  </Link>
-                  {product.recommendationReason && (
-                    <div className="mt-2 p-2 bg-primary/10 rounded-lg">
-                      <p className="text-xs text-primary font-medium">
-                        💡 {product.recommendationReason}
-                      </p>
+            {/* Main Content */}
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-slate-900">
+                  Recommended Products ({filteredRecommendations.length})
+                </h2>
+                <Link 
+                  to="/products"
+                  className="text-primary hover:underline font-medium"
+                >
+                  Browse All Products →
+                </Link>
+              </div>
+              
+              {filteredRecommendations.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredRecommendations.map((product) => (
+                    <div key={product._id} className="relative">
+                      <Link to={`/products/${product._id}`}>
+                        <ProductCard
+                          id={product._id}
+                          name={product.title}
+                          description={product.description}
+                          price={product.price}
+                          size="50ml"
+                          rating={4.5}
+                          reviews={0}
+                          image={product.imageUrl || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=500&q=80'}
+                          recommended={true}
+                          newArrival={false}
+                        />
+                      </Link>
+                      {product.recommendationReason && (
+                        <div className="mt-2 p-2 bg-primary/10 rounded-lg">
+                          <p className="text-xs text-primary font-medium">
+                            💡 {product.recommendationReason}
+                          </p>
+                        </div>
+                      )}
+                      {/* Age Group Badge */}
+                      {product.ageGroup && product.ageGroup !== 'adult' && (
+                        <div className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
+                          {product.ageGroup === 'infant' && '👶 Baby'}
+                          {product.ageGroup === 'child' && '🧒 Child'}
+                          {product.ageGroup === 'teen' && '👦 Teen'}
+                          {product.ageGroup === 'all-ages' && '👨‍👩‍👧‍👦 All Ages'}
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
+              ) : (
+                <div className="text-center py-12">
+                  <div className="text-slate-400 text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-bold text-slate-900 mb-2">No products match your filters</h3>
+                  <p className="text-slate-600 mb-6">
+                    Try adjusting your filters to see more recommendations.
+                  </p>
+                  <button 
+                    onClick={() => setFilters({ category: '', search: '', ageGroup: '' })}
+                    className="px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-primary/90 transition-colors"
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ) : (

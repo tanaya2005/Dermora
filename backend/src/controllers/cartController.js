@@ -17,6 +17,10 @@ export const addToCart = async (req, res, next) => {
       return res.status(404).json({ error: 'Product not found' });
     }
 
+    // Increment addToCartCount
+    product.addToCartCount = (product.addToCartCount || 0) + 1;
+    await product.save();
+
     if (product.stock < validatedData.quantity) {
       return res.status(400).json({ error: 'Insufficient stock' });
     }

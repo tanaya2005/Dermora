@@ -93,7 +93,8 @@ function getRecommendationKeywords(skinType, skinConcerns) {
     'oily': ['oil-free', 'niacinamide', 'salicylic', 'clay', 'mattifying', 'pore'],
     'dry': ['hyaluronic', 'ceramide', 'moisturizing', 'hydrating', 'barrier', 'cream'],
     'combination': ['balancing', 'gentle', 'hydrating', 'oil-free', 'lightweight'],
-    'sensitive': ['gentle', 'fragrance-free', 'soothing', 'aloe', 'calming', 'mild']
+    'sensitive': ['gentle', 'fragrance-free', 'soothing', 'aloe', 'calming', 'mild'],
+    'baby': ['baby', 'gentle', 'mild', 'hypoallergenic', 'tear-free', 'infant', 'newborn']
   };
 
   if (skinTypeKeywords[skinType]) {
@@ -106,7 +107,10 @@ function getRecommendationKeywords(skinType, skinConcerns) {
     'aging': ['retinol', 'anti-aging', 'collagen', 'peptide', 'vitamin c', 'firming'],
     'pigmentation': ['vitamin c', 'brightening', 'dark spot', 'even tone', 'kojic', 'arbutin'],
     'texture': ['exfoliating', 'aha', 'bha', 'smooth', 'resurfacing', 'glycolic'],
-    'redness': ['soothing', 'calming', 'anti-inflammatory', 'centella', 'green tea', 'niacinamide']
+    'redness': ['soothing', 'calming', 'anti-inflammatory', 'centella', 'green tea', 'niacinamide'],
+    'diaper rash': ['diaper', 'rash', 'zinc', 'calendula', 'protective', 'barrier'],
+    'dryness': ['moisturizing', 'hydrating', 'dry skin', 'barrier', 'ceramide', 'hyaluronic'],
+    'eczema': ['eczema', 'sensitive', 'fragrance-free', 'hypoallergenic', 'gentle', 'soothing']
   };
 
   skinConcerns.forEach(concern => {
@@ -133,6 +137,8 @@ function getRecommendationReason(product, skinType, skinConcerns) {
     reasons.push(`Great for ${skinType} skin hydration`);
   } else if (skinType === 'sensitive' && (productText.includes('gentle') || productText.includes('soothing'))) {
     reasons.push(`Gentle formula for ${skinType} skin`);
+  } else if (skinType === 'baby' && (productText.includes('baby') || productText.includes('gentle') || productText.includes('mild'))) {
+    reasons.push(`Safe and gentle for baby's delicate skin`);
   }
 
   // Check if product addresses concerns
@@ -143,6 +149,12 @@ function getRecommendationReason(product, skinType, skinConcerns) {
       reasons.push('Anti-aging benefits');
     } else if (concern === 'pigmentation' && (productText.includes('brightening') || productText.includes('vitamin c'))) {
       reasons.push('Brightens and evens skin tone');
+    } else if (concern === 'diaper rash' && (productText.includes('diaper') || productText.includes('rash') || productText.includes('protective'))) {
+      reasons.push('Helps prevent and treat diaper rash');
+    } else if (concern === 'eczema' && (productText.includes('eczema') || productText.includes('hypoallergenic'))) {
+      reasons.push('Suitable for eczema-prone skin');
+    } else if (concern === 'dryness' && (productText.includes('moistur') || productText.includes('hydrat'))) {
+      reasons.push('Provides deep hydration for dry skin');
     }
   });
 

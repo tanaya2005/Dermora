@@ -49,6 +49,16 @@ export const createOrder = async (req, res, next) => {
       orderItems,
     });
 
+    // Update product analytics and stock
+    for (const item of orderItems) {
+      await Product.findByIdAndUpdate(item.productId, {
+        $inc: { 
+          purchaseCount: 1,
+          stock: -item.quantity 
+        }
+      });
+    }
+
     await order.populate([
       { path: 'orderItems.productId', select: 'id title imageUrl' },
       { path: 'buyerId', select: 'id name email' },

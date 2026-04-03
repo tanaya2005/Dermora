@@ -7,9 +7,10 @@ const skinTypes = [
   { id: 'oily', label: 'Oily', desc: 'Shiny appearance, visible pores, acne-prone.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKMho2M16hwFkT5oGafuEFwNyn4irOHjrZbW7FumblCqrDWexdwbg4zVdH4HOuUHGT4ia0rygHuU-2GOMtJFIlCFP_vbHeZmk40iipIn6JxACBVPUKsYhBxLAfpoin4pEau3Ekzo9CmFAPzBK2fuX0J3eTSb-JjHXjiB_qGf6pSNOh00l-Ixt88JBV2DdztNPYGNmVlNekGkfsGEuu7a1DOzZVsKLDRSnpogvf8boRfRDM54uT29a-ReIXU3qau_sYyaQMKMkoxSQ' },
   { id: 'combination', label: 'Combination', desc: 'Oily T-zone (nose/forehead), dry cheeks.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAG0By3J8hOIGOeaxaksPSSPnL3o59SvspU6gTT4xIAAfAm8EcdM7GoM6VVuhtd7h0EPEEV0j7GdpZSuddSPcX-qHCRgh8zslqtnjjMMhXTmnoPUoMyH3dlu3D7fm1XtTcLCl1BagZRCOKWyCgpxNxHmjSASm_6wVKbuZdcrh0ifdPi_ys-6b6OngjZUiASotU-0fluHYaGjRLjEeoyZf1CXPLtxM_l8ofM1cBQu8Z-D9X2KsZpvusiaiaNSlkFmiCd7yH_DtJt8z8' },
   { id: 'sensitive', label: 'Sensitive', desc: 'Reacts easily to products, prone to redness.', img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDBOdrVvADxRifg3sriw83XGjd4lYDWAwJQxD05TS3eaOSlO7rLGYNFz5q3s0Awu3BXD_rozMm9cADb2_nzTbNedNbG6lcEzF6HBq6vsniCu1uaP6-LBxkeamPIJu4Q0eyBsMN9hH3Eimkq0z3sDSm8q4T_6wC4nVj9oUYvXtDvp-jrreFJnj6KsAhC9nfrnYFuqlHeue_Eb0Ixu7S9kb1WK6A6VjRjfvnffFvAcA6OeyV_y0x9YRk4lnX7y0SqceXpQ3hmh5m3bqg' },
+  { id: 'baby', label: 'Baby/Infant', desc: 'Ultra-gentle products for delicate baby skin.', img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&q=80' },
 ];
 
-const concerns = ['Acne', 'Aging', 'Pigmentation', 'Texture', 'Redness'];
+const concerns = ['Acne', 'Aging', 'Pigmentation', 'Texture', 'Redness', 'Diaper Rash', 'Dryness', 'Eczema'];
 
 const budgetRanges = [
   { id: 'under-1000', label: 'Under ₹1,000', desc: 'Budget-friendly essentials' },

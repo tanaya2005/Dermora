@@ -1,7 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 export const AdminDashboardPage: React.FC = () => {
+  const { apiRequest } = useAuth();
+  const [analytics, setAnalytics] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'searched' | 'purchased' | 'addedToCart' | 'clicked'>('purchased');
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const data = await apiRequest('/api/analytics/admin');
+        setAnalytics(data);
+      } catch (error) {
+        console.error('Failed to fetch admin analytics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, [apiRequest]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!analytics) return <div>No data available</div>;
+
+  const { summary, topProducts } = analytics;
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-black font-display min-h-screen">
       <div className="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
@@ -114,69 +145,57 @@ export const AdminDashboardPage: React.FC = () => {
               <div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-2 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 rounded-lg">
-                    <span className="material-symbols-outlined">payments</span>
+                    <span className="material-symbols-outlined">search</span>
                   </div>
-                  <span className="text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-1 rounded-full">
-                    +12.5%
-                  </span>
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                  Total Revenue
+                  Total Searches
                 </p>
                 <p className="text-2xl font-bold mt-1 text-slate-900 dark:text-black">
-                  ₹128,430.00
+                  {summary.totalSearches}
                 </p>
               </div>
               <div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-2 bg-blue-100 dark:bg-blue-500/20 text-blue-600 rounded-lg">
                     <span className="material-symbols-outlined">
-                      card_membership
+                      mouse
                     </span>
                   </div>
-                  <span className="text-blue-600 text-xs font-bold bg-blue-50 px-2 py-1 rounded-full">
-                    +5.2%
-                  </span>
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                  Active Subscriptions
+                  Total Clicks
                 </p>
                 <p className="text-2xl font-bold mt-1 text-slate-900 dark:text-black">
-                  1,240
+                  {summary.totalClicks}
                 </p>
               </div>
               <div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-2 bg-amber-100 dark:bg-amber-500/20 text-amber-600 rounded-lg">
                     <span className="material-symbols-outlined">
-                      shopping_bag
+                      shopping_cart
                     </span>
                   </div>
-                  <span className="text-amber-600 text-xs font-bold bg-amber-50 px-2 py-1 rounded-full">
-                    +2.4%
-                  </span>
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                  Active Orders
+                  Add to Cart
                 </p>
                 <p className="text-2xl font-bold mt-1 text-slate-900 dark:text-black">
-                  86
+                  {summary.totalAddToCart}
                 </p>
               </div>
               <div className="bg-white dark:bg-white/5 p-6 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm">
                 <div className="flex justify-between items-start mb-4">
                   <div className="p-2 bg-primary/10 text-primary rounded-lg">
-                    <span className="material-symbols-outlined">inventory</span>
+                    <span className="material-symbols-outlined">shopping_bag</span>
                   </div>
-                  <span className="text-rose-500 text-xs font-bold bg-rose-50 px-2 py-1 rounded-full">
-                    -3%
-                  </span>
                 </div>
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-                  Stock Efficiency
+                  Total Purchases
                 </p>
                 <p className="text-2xl font-bold mt-1 text-slate-900 dark:text-black">
-                  94.2%
+                  {summary.totalPurchases}
                 </p>
               </div>
             </div>
@@ -374,103 +393,71 @@ export const AdminDashboardPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Top Selling Products Table */}
+            {/* Top Performing Products Table */}
             <div className="bg-white dark:bg-white/5 rounded-2xl border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-black dark:border-white/5 flex items-center justify-between">
+              <div className="p-6 border-b border-black dark:border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h3 className="text-lg font-bold text-slate-900 dark:text-black">
-                  Top Selling Products
+                  Top Performing Products
                 </h3>
-                <button className="text-primary text-sm font-bold hover:underline">
-                  View Sales Report
-                </button>
+                <div className="flex bg-slate-100 dark:bg-white/10 p-1 rounded-xl">
+                  {(['purchased', 'searched', 'addedToCart', 'clicked'] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
+                        activeTab === tab
+                          ? 'bg-white dark:bg-slate-600 text-primary shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      {tab === 'addedToCart' ? 'Added to Cart' : tab}
+                    </button>
+                  ))}
+                </div>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead className="bg-slate-50 dark:bg-white/5 text-slate-500 text-[11px] font-bold uppercase tracking-wider">
                     <tr>
                       <th className="px-6 py-4">Product</th>
-                      <th className="px-6 py-4">SKU</th>
-                      <th className="px-6 py-4">Price</th>
-                      <th className="px-6 py-4">Sold</th>
-                      <th className="px-6 py-4 text-right">Revenue</th>
+                      <th className="px-6 py-4">Seller</th>
+                      <th className="px-6 py-4">Searches</th>
+                      <th className="px-6 py-4">Clicks</th>
+                      <th className="px-6 py-4">Add to Cart</th>
+                      <th className="px-6 py-4 text-right">Purchases</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black dark:divide-white/5">
-                    <tr className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="size-10 rounded-lg bg-cover bg-center"
-                            title="Skincare oil bottle"
-                            style={{
-                              backgroundImage:
-                                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCEohTOX_EaHd8NNRP707qVkFfzWGRcXoH_Q9js-SAioDqODc-2GS8HgMy1-ZdY-9bp-r54DnJURwg6fqPcMJ4EbBtaKSlW_3dsGWLFtMJFO5iaDTdWUsZeS9_M_wFijJfsqq4Kl6otMS3KafAB1DMxzDu2vE7m3U6nqKqJG2E4SdFYUAaag6nKP17k20-DuTzq5HGyVodjzAKdCictrkxQw9WQ0NX4qeN68O7YOuzEcPGzsG47Q4kiWbU3YLmC1NhXUNu1xsoBzdM")',
-                            }}
-                          ></div>
-                          <span className="text-sm font-medium">
-                            Midnight Recovery Oil
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-500">
-                        DERM-9283
-                      </td>
-                      <td className="px-6 py-4 text-sm">₹84.00</td>
-                      <td className="px-6 py-4 text-sm">842</td>
-                      <td className="px-6 py-4 text-sm font-bold text-right">
-                        ₹70,728.00
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="size-10 rounded-lg bg-cover bg-center"
-                            title="SPF face cream"
-                            style={{
-                              backgroundImage:
-                                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuD0eMAMQhZJEJ2u1rCheJ-kf9QrvXEiMYKNdtjd_o8W-X0wxSbwxCEf1yLhZhHSnbyOttyIYginSKHhaOooXkBa8njvSzrj9meWjKsts6CAntKA5pU9NmdhNA1cFF0sgTSqwn0d4cX2IlhjKpL5kXbCWqAo_HdKMgluG-OoHhkwri6ENVBKAiA61PDEt8kINWaGrIQmqcVFiZd6RbfdaeRj0yY9cWWq_SoSR8hWTrrRgzf-hs8LAcN2KSFqZp8MaoPQpHrD1PyWhaI")',
-                            }}
-                          ></div>
-                          <span className="text-sm font-medium">
-                            Daily SPF 50 Shield
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-500">
-                        DERM-1024
-                      </td>
-                      <td className="px-6 py-4 text-sm">₹38.00</td>
-                      <td className="px-6 py-4 text-sm">756</td>
-                      <td className="px-6 py-4 text-sm font-bold text-right">
-                        ₹28,728.00
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="size-10 rounded-lg bg-cover bg-center"
-                            title="Eye cream jar"
-                            style={{
-                              backgroundImage:
-                                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuAjffMF2jNB8BlBM8TBvTRkGWKwrYLVZV_VCJsdY-LgkIYI3NWhO7bsfZbtA7Lo8TPp2epqZB-E6jWrKlWyEM7HmAA0i4iQVvbGV26y3RIjkT8oYWJyd8EN6O2hFDEkv38FuygOIZNW9ejmEpP1nTJ3tHN30325L_3GS5H6j6X3z2MTEem33LgJ73CgBkHnXWJVfd9szIbYPh5GQ4qMu1HyPKVNoMVt8uEla_QR8J3Cz79SL-wfWs03feAgSfy62UvSAKyWJKSEG1s")',
-                            }}
-                          ></div>
-                          <span className="text-sm font-medium">
-                            Retinol Eye Treatment
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm font-mono text-slate-500">
-                        DERM-4421
-                      </td>
-                      <td className="px-6 py-4 text-sm">₹56.00</td>
-                      <td className="px-6 py-4 text-sm">520</td>
-                      <td className="px-6 py-4 text-sm font-bold text-right">
-                        ₹29,120.00
-                      </td>
-                    </tr>
+                    {topProducts[activeTab].map((product: any) => (
+                      <tr key={product._id} className="hover:bg-slate-50 dark:hover:bg-white/5 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            {product.imageUrl && (
+                              <img src={product.imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded-lg" />
+                            )}
+                            <span className="text-sm font-medium">
+                              {product.title}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-slate-500">
+                          {product.sellerId?.name || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 text-sm">{product.searchCount || 0}</td>
+                        <td className="px-6 py-4 text-sm">{product.clickCount || 0}</td>
+                        <td className="px-6 py-4 text-sm">{product.addToCartCount || 0}</td>
+                        <td className="px-6 py-4 text-sm font-bold text-right">
+                          {product.purchaseCount || 0}
+                        </td>
+                      </tr>
+                    ))}
+                    {topProducts[activeTab].length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="px-6 py-10 text-center text-slate-400">
+                          No products found in this category
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>

@@ -42,6 +42,8 @@ const categoryData = [
   { name: 'Treatments', value: 6 },
 ];
 
+import { useAuth } from '../../AuthContext';
+
 const COLORS = ['#d4567a', '#b8405f', '#8f3349', '#c77d9e', '#e89bb5'];
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -62,35 +64,65 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 const SellerAnalyticsPage: React.FC = () => {
-  const totalRevenue = monthlyRevenue.reduce((s, m) => s + m.revenue, 0);
-  const totalOrders = monthlyRevenue.reduce((s, m) => s + m.orders, 0);
-  const avgOrderValue = Math.round(totalRevenue / totalOrders);
+  const { apiRequest } = useAuth();
+  const [analytics, setAnalytics] = React.useState<any>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState<'searched' | 'purchased' | 'addedToCart' | 'clicked'>('purchased');
+
+  React.useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const data = await apiRequest('/api/analytics/seller');
+        setAnalytics(data);
+      } catch (error) {
+        console.error('Failed to fetch analytics:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAnalytics();
+  }, [apiRequest]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!analytics) return <div>No data available</div>;
+
+  const { summary, topProducts } = analytics;
 
   return (
     <div className="space-y-7">
       {/* KPI Strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {[
           {
-            label: 'Total Revenue (6M)',
-            value: `₹${totalRevenue.toLocaleString('en-IN')}`,
-            change: '+18.4%',
-            icon: <TrendingUp className="w-5 h-5 text-emerald-600" />,
+            label: 'Total Searches',
+            value: summary.totalSearches,
+            icon: <ArrowUpRight className="w-5 h-5 text-emerald-600" />,
             bg: 'bg-emerald-100 dark:bg-emerald-900/30',
           },
           {
-            label: 'Total Orders (6M)',
-            value: totalOrders,
-            change: '+12.1%',
-            icon: <ShoppingBag className="w-5 h-5 text-blue-600" />,
+            label: 'Total Clicks',
+            value: summary.totalClicks,
+            icon: <TrendingUp className="w-5 h-5 text-blue-600" />,
             bg: 'bg-blue-100 dark:bg-blue-900/30',
           },
           {
-            label: 'Avg. Order Value',
-            value: `₹${avgOrderValue.toLocaleString('en-IN')}`,
-            change: '+5.7%',
+            label: 'Add to Cart',
+            value: summary.totalAddToCart,
             icon: <Package className="w-5 h-5 text-primary" />,
             bg: 'bg-pink-100 dark:bg-pink-900/30',
+          },
+          {
+            label: 'Total Purchases',
+            value: summary.totalPurchases,
+            icon: <ShoppingBag className="w-5 h-5 text-emerald-600" />,
+            bg: 'bg-emerald-100 dark:bg-emerald-900/30',
           },
         ].map(kpi => (
           <div key={kpi.label} className="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm border border-pink-100/50 dark:border-slate-700 flex items-start gap-4">
@@ -100,10 +132,6 @@ const SellerAnalyticsPage: React.FC = () => {
             <div className="min-w-0">
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{kpi.value}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">{kpi.label}</p>
-              <span className="inline-flex items-center mt-1 text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                <ArrowUpRight className="w-3 h-3 mr-0.5" />
-                {kpi.change} vs last period
-              </span>
             </div>
           </div>
         ))}
@@ -195,49 +223,62 @@ const SellerAnalyticsPage: React.FC = () => {
 
       {/* Top Products Table */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-pink-100/50 dark:border-slate-700 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700">
-          <h3 className="font-semibold text-gray-900 dark:text-white">Top Selling Products</h3>
-          <p className="text-sm text-gray-400">Best performers this period</p>
+        <div className="px-6 py-4 border-b border-gray-100 dark:border-slate-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-white">Top Performing Products</h3>
+            <p className="text-sm text-gray-400">Products with highest engagement and sales</p>
+          </div>
+          <div className="flex bg-gray-100 dark:bg-slate-700 p-1 rounded-xl">
+            {(['purchased', 'searched', 'addedToCart', 'clicked'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-1.5 rounded-lg text-xs font-bold capitalize transition-all ${
+                  activeTab === tab
+                    ? 'bg-white dark:bg-slate-600 text-primary shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                }`}
+              >
+                {tab === 'addedToCart' ? 'Added to Cart' : tab}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-700/30">
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">#</th>
                 <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Product</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Units Sold</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Revenue</th>
-                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider hidden sm:table-cell">Share</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Searches</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Clicks</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Add to Cart</th>
+                <th className="text-left px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Purchases</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
-              {topProducts.map((product, i) => {
-                const maxSales = topProducts[0].sales;
-                const pct = Math.round((product.sales / maxSales) * 100);
-                return (
-                  <tr key={product.name} className="hover:bg-pink-50/20 dark:hover:bg-slate-700/20 transition-colors">
-                    <td className="px-6 py-3.5">
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-100 text-amber-600' : i === 1 ? 'bg-gray-100 text-gray-500' : i === 2 ? 'bg-orange-100 text-orange-600' : 'bg-pink-50 text-primary'}`}>
-                        {i + 1}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3.5 font-medium text-gray-900 dark:text-white">{product.name}</td>
-                    <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.sales}</td>
-                    <td className="px-6 py-3.5 font-semibold text-gray-900 dark:text-white">₹{product.revenue.toLocaleString('en-IN')}</td>
-                    <td className="px-6 py-3.5 hidden sm:table-cell">
-                      <div className="flex items-center gap-2">
-                        <div className="flex-1 h-2 bg-gray-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-primary to-primary-dark"
-                            style={{ width: `${pct}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-gray-400 w-8">{pct}%</span>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+              {topProducts[activeTab].map((product: any) => (
+                <tr key={product._id} className="hover:bg-pink-50/20 dark:hover:bg-slate-700/20 transition-colors">
+                  <td className="px-6 py-3.5 font-medium text-gray-900 dark:text-white">
+                    <div className="flex items-center gap-3">
+                      {product.imageUrl && (
+                        <img src={product.imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded-lg" />
+                      )}
+                      <span>{product.title}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.searchCount || 0}</td>
+                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.clickCount || 0}</td>
+                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.addToCartCount || 0}</td>
+                  <td className="px-6 py-3.5 font-semibold text-gray-900 dark:text-white">{product.purchaseCount || 0}</td>
+                </tr>
+              ))}
+              {topProducts[activeTab].length === 0 && (
+                <tr>
+                  <td colSpan={5} className="px-6 py-10 text-center text-gray-400">
+                    No products found in this category
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

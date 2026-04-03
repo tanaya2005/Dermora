@@ -3,14 +3,17 @@ import React, { useState } from "react";
 interface FilterSidebarProps {
   onCategoryChange?: (category: string) => void;
   onSearchChange?: (search: string) => void;
+  onAgeGroupChange?: (ageGroup: string) => void;
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ 
   onCategoryChange,
-  onSearchChange 
+  onSearchChange,
+  onAgeGroupChange 
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedAgeGroup, setSelectedAgeGroup] = useState('');
 
   const categories = [
     'Cleansers',
@@ -28,6 +31,12 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     const newCategory = selectedCategory === category ? '' : category;
     setSelectedCategory(newCategory);
     onCategoryChange?.(newCategory);
+  };
+
+  const handleAgeGroupChange = (ageGroup: string) => {
+    const newAgeGroup = selectedAgeGroup === ageGroup ? '' : ageGroup;
+    setSelectedAgeGroup(newAgeGroup);
+    onAgeGroupChange?.(newAgeGroup);
   };
 
   const handleSearchChange = (value: string) => {
@@ -122,6 +131,70 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
                   />
                   <span className="group-hover:text-primary transition-colors">
                     Combination
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            {/* Age Group */}
+            <div className="flex flex-col gap-3">
+              <p className="text-sm font-bold uppercase tracking-wider text-primary/70">
+                Age Group
+              </p>
+              <div className="flex flex-col gap-2">
+                <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                  <input
+                    className="rounded border-primary/30 text-primary focus:ring-primary"
+                    type="checkbox"
+                    checked={selectedAgeGroup === 'infant'}
+                    onChange={() => handleAgeGroupChange('infant')}
+                  />
+                  <span className="group-hover:text-primary transition-colors">
+                    👶 Baby/Infant
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                  <input
+                    className="rounded border-primary/30 text-primary focus:ring-primary"
+                    type="checkbox"
+                    checked={selectedAgeGroup === 'child'}
+                    onChange={() => handleAgeGroupChange('child')}
+                  />
+                  <span className="group-hover:text-primary transition-colors">
+                    🧒 Child
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                  <input
+                    className="rounded border-primary/30 text-primary focus:ring-primary"
+                    type="checkbox"
+                    checked={selectedAgeGroup === 'teen'}
+                    onChange={() => handleAgeGroupChange('teen')}
+                  />
+                  <span className="group-hover:text-primary transition-colors">
+                    👦 Teen
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                  <input
+                    className="rounded border-primary/30 text-primary focus:ring-primary"
+                    type="checkbox"
+                    checked={selectedAgeGroup === 'adult'}
+                    onChange={() => handleAgeGroupChange('adult')}
+                  />
+                  <span className="group-hover:text-primary transition-colors">
+                    👩 Adult
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                  <input
+                    className="rounded border-primary/30 text-primary focus:ring-primary"
+                    type="checkbox"
+                    checked={selectedAgeGroup === 'all-ages'}
+                    onChange={() => handleAgeGroupChange('all-ages')}
+                  />
+                  <span className="group-hover:text-primary transition-colors">
+                    👨‍👩‍👧‍👦 All Ages
                   </span>
                 </label>
               </div>

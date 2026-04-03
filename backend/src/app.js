@@ -14,6 +14,7 @@ import assessmentRoutes from './routes/assessmentRoutes.js';
 import recommendationRoutes from './routes/recommendationRoutes.js';
 import wishlistRoutes from './routes/wishlistRoutes.js';
 import subscriptionRoutes from './routes/subscriptionRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use('/api/assessment', assessmentRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 app.use('/api/wishlist', wishlistRoutes);
 app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // 404 handler
 app.use(notFound);

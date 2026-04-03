@@ -56,6 +56,15 @@ export const getProducts = async (req, res, next) => {
       Product.countDocuments(query),
     ]);
 
+    // Increment searchCount for all returned products if searching
+    if (search && products.length > 0) {
+      const productIds = products.map(p => p._id);
+      await Product.updateMany(
+        { _id: { $in: productIds } },
+        { $inc: { searchCount: 1 } }
+      );
+    }
+
     res.json({
       products,
       pagination: {
@@ -82,6 +91,10 @@ export const getProductById = async (req, res, next) => {
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
+
+    // Increment clickCount
+    product.clickCount = (product.clickCount || 0) + 1;
+    await product.save();
 
     res.json({ product });
   } catch (error) {

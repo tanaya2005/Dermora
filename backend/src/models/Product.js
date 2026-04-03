@@ -21,11 +21,32 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  ageGroup: {
+    type: String,
+    enum: ['infant', 'child', 'teen', 'adult', 'all-ages'],
+    default: 'adult',
+  },
   imageUrl: String,
   sellerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
+  },
+  searchCount: {
+    type: Number,
+    default: 0,
+  },
+  clickCount: {
+    type: Number,
+    default: 0,
+  },
+  addToCartCount: {
+    type: Number,
+    default: 0,
+  },
+  purchaseCount: {
+    type: Number,
+    default: 0,
   },
 }, {
   timestamps: true,

@@ -31,11 +31,11 @@ const userSchema = new mongoose.Schema({
   skinProfile: {
     skinType: {
       type: String,
-      enum: ['dry', 'oily', 'combination', 'sensitive'],
+      enum: ['dry', 'oily', 'combination', 'sensitive', 'baby'],
     },
     skinConcerns: [{
       type: String,
-      enum: ['acne', 'aging', 'pigmentation', 'texture', 'redness'],
+      enum: ['acne', 'aging', 'pigmentation', 'texture', 'redness', 'diaper rash', 'dryness', 'eczema'],
     }],
     budget: {
       type: String,
