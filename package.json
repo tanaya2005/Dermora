@@ -1,0 +1,15 @@
+{
+  "name": "dermora-fullstack",
+  "version": "1.0.0",
+  "description": "Dermora - Full-stack skincare marketplace",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ]
+}

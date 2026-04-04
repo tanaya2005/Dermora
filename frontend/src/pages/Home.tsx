@@ -1,10 +1,17 @@
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
 import AdManager from '../components/AdManager';
+import SkinQuizPopup from '../components/SkinQuizPopup';
+import { useSkinQuizPopup } from '../hooks/useSkinQuizPopup';
 
 export default function Home() {
+  const { isPopupOpen, closePopup } = useSkinQuizPopup();
+
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-white dark:bg-slate-900 transition-colors duration-300">
+      
+      {/* Skin Quiz Popup */}
+      <SkinQuizPopup isOpen={isPopupOpen} onClose={closePopup} />
       
       {/* Advertisement Manager */}
       <AdManager />
