@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Footer } from '../components/Footer';
+import AdManager from '../components/AdManager';
 
 export default function Home() {
   return (
     <div className="relative flex min-h-screen w-full flex-col bg-white dark:bg-slate-900 transition-colors duration-300">
       
+      {/* Advertisement Manager */}
+      <AdManager />
       
       {/* Hero Section */}
       

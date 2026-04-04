@@ -23,8 +23,8 @@ export const getRecommendations = async (req, res, next) => {
     // Rule-based recommendation logic
     const recommendationKeywords = getRecommendationKeywords(skinType, skinConcerns);
     
-    // Build search query for products
-    const searchQuery = {
+    // Build search query for products based on skin type
+    let searchQuery = {
       $or: [
         { title: { $regex: recommendationKeywords.join('|'), $options: 'i' } },
         { description: { $regex: recommendationKeywords.join('|'), $options: 'i' } }
@@ -42,25 +42,63 @@ export const getRecommendations = async (req, res, next) => {
       searchQuery.price = budgetRanges[budget];
     }
 
-    // Get recommended products
+    // Get recommended products based on skin profile
     const recommendedProducts = await Product.find(searchQuery)
       .populate('sellerId', 'name email')
-      .limit(12)
+      .limit(8)
       .sort({ createdAt: -1 });
 
-    // If no specific matches, get popular products
-    let fallbackProducts = [];
-    if (recommendedProducts.length < 6) {
-      fallbackProducts = await Product.find({ 
+    // Always include some baby products if user has baby skin type or concerns
+    let babyProducts = [];
+    if (skinType === 'baby' || skinConcerns.includes('diaper rash') || skinConcerns.includes('eczema')) {
+      babyProducts = await Product.find({ 
+        ageGroup: 'infant',
         stock: { $gt: 0 },
         _id: { $nin: recommendedProducts.map(p => p._id) }
       })
       .populate('sellerId', 'name email')
-      .limit(6 - recommendedProducts.length)
+      .limit(6)
       .sort({ createdAt: -1 });
     }
 
-    const allRecommendations = [...recommendedProducts, ...fallbackProducts];
+    // Get some general adult products for variety
+    let adultProducts = [];
+    if (skinType !== 'baby') {
+      adultProducts = await Product.find({ 
+        ageGroup: { $in: ['adult', 'teen', 'all-ages'] },
+        stock: { $gt: 0 },
+        _id: { $nin: [...recommendedProducts.map(p => p._id), ...babyProducts.map(p => p._id)] }
+      })
+      .populate('sellerId', 'name email')
+      .limit(6)
+      .sort({ createdAt: -1 });
+    }
+
+    // If no specific matches, get popular products from all categories
+    let fallbackProducts = [];
+    const currentProductIds = [
+      ...recommendedProducts.map(p => p._id),
+      ...babyProducts.map(p => p._id),
+      ...adultProducts.map(p => p._id)
+    ];
+
+    if (currentProductIds.length < 10) {
+      fallbackProducts = await Product.find({ 
+        stock: { $gt: 0 },
+        _id: { $nin: currentProductIds }
+      })
+      .populate('sellerId', 'name email')
+      .limit(10 - currentProductIds.length)
+      .sort({ createdAt: -1 });
+    }
+
+    // Combine all recommendations
+    const allRecommendations = [
+      ...recommendedProducts, 
+      ...babyProducts, 
+      ...adultProducts, 
+      ...fallbackProducts
+    ];
 
     // Add recommendation reasons
     const recommendationsWithReasons = allRecommendations.map(product => ({

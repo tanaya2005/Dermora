@@ -22,3 +22,5 @@ export const requireRole = (...allowedRoles) => {
 export const adminOnly = requireRole('ADMIN');
 export const sellerOnly = requireRole('SELLER', 'ADMIN');
 export const buyerOnly = requireRole('BUYER', 'SELLER', 'ADMIN');
+export const dermatologistOnly = requireRole('DERMATOLOGIST', 'ADMIN');
+export const medicalStaff = requireRole('DERMATOLOGIST', 'ADMIN');

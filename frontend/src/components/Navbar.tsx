@@ -30,6 +30,9 @@ export const Navbar: React.FC = () => {
             {user?.role === 'SELLER' && (
               <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/seller/dashboard">My Store</Link>
             )}
+            {user?.role === 'DERMATOLOGIST' && (
+              <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/dermatologist/dashboard">My Practice</Link>
+            )}
             {user?.role === 'ADMIN' && (
               <Link className="text-sm font-medium hover:text-primary dark:text-slate-300 dark:hover:text-primary transition-colors" to="/admin">Admin Panel</Link>
             )}

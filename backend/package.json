@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "seed:ads": "node src/scripts/seedAdvertisements.js",
+    "seed:products": "node src/scripts/seedProducts.js",
+    "seed:dermatologist": "node src/scripts/seedDermatologist.js"
   },
   "keywords": ["skincare", "marketplace", "ecommerce"],
   "author": "",

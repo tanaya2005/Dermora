@@ -24,7 +24,11 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({
     'Toners',
     'Eye Care',
     'Masks',
-    'Mists'
+    'Mists',
+    'Baby Care',
+    'Hair Care',
+    'Gel',
+    'Scrubs'
   ];
 
   const handleCategoryChange = (category: string) => {

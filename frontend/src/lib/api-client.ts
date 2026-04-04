@@ -138,3 +138,19 @@ export async function verifyPayment(paymentData: {
     body: JSON.stringify(paymentData),
   });
 }
+
+// Generic API client for all HTTP methods
+export const apiClient = {
+  get: (endpoint: string) => apiRequest(endpoint),
+  post: (endpoint: string, data?: any) => apiRequest(endpoint, {
+    method: "POST",
+    body: data ? JSON.stringify(data) : undefined,
+  }),
+  put: (endpoint: string, data?: any) => apiRequest(endpoint, {
+    method: "PUT",
+    body: data ? JSON.stringify(data) : undefined,
+  }),
+  delete: (endpoint: string) => apiRequest(endpoint, {
+    method: "DELETE",
+  }),
+};

@@ -55,6 +55,10 @@ export default function AdminDashboard() {
                 <span className="material-symbols-outlined">group</span>
                 <span className="text-sm font-medium">Customers</span>
               </Link>
+              <Link className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-primary/10 hover:text-primary transition-all" to="/admin/advertisements">
+                <span className="material-symbols-outlined">campaign</span>
+                <span className="text-sm font-medium">Advertisements</span>
+              </Link>
             </nav>
           </div>
 

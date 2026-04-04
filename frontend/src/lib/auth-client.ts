@@ -8,7 +8,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "SELLER" | "BUYER";
+  role: "ADMIN" | "SELLER" | "BUYER" | "DERMATOLOGIST";
   profileImage?: string;
   emailVerified: boolean;
   skinProfile?: {

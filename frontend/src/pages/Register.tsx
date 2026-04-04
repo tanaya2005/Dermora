@@ -8,7 +8,7 @@ export default function Register() {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'BUYER' as 'BUYER' | 'SELLER' | 'ADMIN',
+    role: 'BUYER' as 'BUYER' | 'SELLER' | 'ADMIN' | 'DERMATOLOGIST',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -64,6 +64,9 @@ export default function Register() {
             break;
           case 'SELLER':
             navigate('/seller/dashboard');
+            break;
+          case 'DERMATOLOGIST':
+            navigate('/dermatologist/dashboard');
             break;
           case 'BUYER':
           default:
@@ -134,6 +137,7 @@ export default function Register() {
             >
               <option value="BUYER">🛍️ Buyer - Shop for skincare products</option>
               <option value="SELLER">🏪 Seller - Sell skincare products</option>
+              <option value="DERMATOLOGIST">👩‍⚕️ Dermatologist - Provide medical consultations</option>
               <option value="ADMIN">👑 Admin - Manage the platform</option>
             </select>
             <p className="mt-1 text-xs text-slate-400 px-1">
@@ -141,6 +145,8 @@ export default function Register() {
                 ? 'Browse and purchase skincare products from various sellers'
                 : formData.role === 'SELLER'
                 ? 'Create your own store and sell skincare products to customers'
+                : formData.role === 'DERMATOLOGIST'
+                ? 'Provide professional dermatology consultations and advice to users'
                 : 'Full administrative access to manage users, products, and orders'
               }
             </p>

@@ -287,14 +287,14 @@ const products = [
     category: "Sunscreen",
     imageUrl: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=800&q=80"
   },
-  // {
-  //   title: "Himalaya Aloe Vera Gel",
-  //   description: "Soothes and hydrates irritated skin.",
-  //   price: 249,
-  //   stock: 120,
-  //   category: "Gel",
-  //   imageUrl: "https://images.unsplash.com/photo-1615485500834-bc10199bc768?w=800&q=80"
-  // },
+  {
+    title: "Himalaya Aloe Vera Gel",
+    description: "Soothes and hydrates irritated skin.",
+    price: 249,
+    stock: 120,
+    category: "Gel",
+    imageUrl: "https://images.unsplash.com/photo-1615485500834-bc10199bc768?w=800&q=80"
+  },
   {
     title: "Forest Essentials Night Cream",
     description: "Rich Ayurvedic cream for overnight repair.",
@@ -303,14 +303,14 @@ const products = [
     category: "Night Creams",
     imageUrl: "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?w=800&q=80"
   },
-  // {
-  //   title: "Minimalist Hyaluronic Acid Serum",
-  //   description: "Deep hydration for plump skin.",
-  //   price: 599,
-  //   stock: 75,
-  //   category: "Serums",
-  //   imageUrl: "https://images.unsplash.com/photo-1620916297397-a4a5f7c0d9c3?w=800&q=80"
-  // },
+  {
+    title: "Minimalist Hyaluronic Acid Serum",
+    description: "Deep hydration for plump skin.",
+    price: 599,
+    stock: 75,
+    category: "Serums",
+    imageUrl: "https://images.unsplash.com/photo-1620916297397-a4a5f7c0d9c3?w=800&q=80"
+  },
   {
     title: "Mamaearth Onion Hair Serum",
     description: "Strengthens hair and reduces hair fall.",
@@ -327,14 +327,14 @@ const products = [
     category: "Masks",
     imageUrl: "https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?w=800&q=80"
   },
-  // {
-  //   title: "Dot & Key Vitamin C Face Cream",
-  //   description: "Brightens and evens skin tone.",
-  //   price: 699,
-  //   stock: 60,
-  //   category: "Moisturizers",
-  //   imageUrl: "https://images.unsplash.com/photo-1556229010-aa9e5d93b2e2?w=800&q=80"
-  // },
+  {
+    title: "Dot & Key Vitamin C Face Cream",
+    description: "Brightens and evens skin tone.",
+    price: 699,
+    stock: 60,
+    category: "Moisturizers",
+    imageUrl: "https://images.unsplash.com/photo-1556229010-aa9e5d93b2e2?w=800&q=80"
+  },
   {
     title: "Wow Charcoal Face Wash",
     description: "Deep cleanses and detoxifies skin.",
@@ -379,7 +379,7 @@ const products = [
     stock: 120,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&q=80"
   },
   {
     title: "Aveeno Baby Daily Moisture Lotion",
@@ -388,7 +388,7 @@ const products = [
     stock: 100,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80"
   },
   {
     title: "Mustela Gentle Cleansing Gel",
@@ -397,7 +397,7 @@ const products = [
     stock: 80,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=800&q=80"
   },
   {
     title: "Sebamed Baby Cleansing Bar",
@@ -406,7 +406,7 @@ const products = [
     stock: 200,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=800&q=80"
   },
   {
     title: "Himalaya Baby Cream",
@@ -415,7 +415,7 @@ const products = [
     stock: 180,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=800&q=80"
   },
   {
     title: "Mamaearth Gentle Baby Face Cream",
@@ -424,7 +424,7 @@ const products = [
     stock: 140,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=800&q=80"
   },
   {
     title: "Chicco Baby Moments Gentle Body Wash",
@@ -433,7 +433,7 @@ const products = [
     stock: 110,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1571875257727-256c39da42af?w=800&q=80"
   },
   {
     title: "Pigeon Baby Moisturizing Lotion",
@@ -442,7 +442,7 @@ const products = [
     stock: 130,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1556228852-80a5e2c3c0c3?w=800&q=80"
   },
   {
     title: "Burt's Bees Baby Nourishing Lotion",
@@ -451,7 +451,7 @@ const products = [
     stock: 90,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1570554886111-e80fcca6a029?w=800&q=80"
   },
   {
     title: "Weleda Calendula Baby Cream",
@@ -460,7 +460,7 @@ const products = [
     stock: 70,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&q=80"
   },
   {
     title: "Johnson's Baby Oil",
@@ -469,7 +469,7 @@ const products = [
     stock: 160,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=800&q=80"
   },
   {
     title: "Cetaphil Baby Moisturizing Oil",
@@ -478,7 +478,7 @@ const products = [
     stock: 100,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=800&q=80"
   },
   {
     title: "Mustela Hydra Bebe Body Lotion",
@@ -487,7 +487,7 @@ const products = [
     stock: 60,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1617897903246-719242758050?w=800&q=80"
   },
   {
     title: "Sebamed Baby Lotion",
@@ -496,7 +496,7 @@ const products = [
     stock: 120,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1585155770960-a6eb1cb4e7e8?w=800&q=80"
   },
   {
     title: "Himalaya Baby Gentle Bath",
@@ -505,7 +505,7 @@ const products = [
     stock: 150,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1621607512214-68297480165e?w=800&q=80"
   },
   {
     title: "Mamaearth Baby Hair Oil",
@@ -514,7 +514,7 @@ const products = [
     stock: 110,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1615485500834-bc10199bc768?w=800&q=80"
   },
   {
     title: "Chicco Baby Moments No Tears Shampoo",
@@ -523,7 +523,7 @@ const products = [
     stock: 100,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?w=800&q=80"
   },
   {
     title: "Pigeon Baby Soap",
@@ -532,7 +532,7 @@ const products = [
     stock: 200,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1620916297397-a4a5f7c0d9c3?w=800&q=80"
   },
   {
     title: "Burt's Bees Baby Bee Buttermilk Soap",
@@ -541,7 +541,7 @@ const products = [
     stock: 80,
     category: "Baby Care",
     ageGroup: "infant",
-    imageUrl: "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=800&q=80"
+    imageUrl: "https://images.unsplash.com/photo-1532413992378-f169ac26fff0?w=800&q=80"
   }
 ];
 

@@ -26,6 +26,12 @@ export const UserRoleIndicator: React.FC<UserRoleIndicatorProps> = ({
           icon: '🏪',
           label: 'Seller'
         };
+      case 'DERMATOLOGIST':
+        return {
+          color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+          icon: '👩‍⚕️',
+          label: 'Dermatologist'
+        };
       case 'BUYER':
       default:
         return {

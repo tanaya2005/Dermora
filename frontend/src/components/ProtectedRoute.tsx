@@ -4,7 +4,7 @@ import type { User } from "../lib/auth-client";
 
 type Props = {
   children: React.ReactNode;
-  allowedRoles?: ("ADMIN" | "SELLER" | "BUYER")[];
+  allowedRoles?: ("ADMIN" | "SELLER" | "BUYER" | "DERMATOLOGIST")[];
   redirectTo?: string;
 };
 

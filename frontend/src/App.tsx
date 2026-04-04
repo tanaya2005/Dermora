@@ -15,6 +15,8 @@ import { OrderHistoryPage } from './pages/OrderHistoryPage';
 import { AdminDashboardPage } from './pages/AdminDashboardPage';
 import { InventoryManagementPage } from './pages/InventoryManagementPage';
 import { AdminOrdersPage } from './pages/AdminOrdersPage';
+import AdminAdvertisementsPage from './pages/AdminAdvertisementsPage';
+import DermatologistDashboard from './pages/DermatologistDashboard';
 import { CartPage } from './pages/CartPage';
 import { MyListPage } from './pages/MyListPage';
 import { ConsultDermatologistPage } from './pages/ConsultDermatologistPage';
@@ -78,6 +80,15 @@ function App() {
             </Route>
 
             {/* ══════════════════════════════════════════════════════════
+                DERMATOLOGIST PORTAL — Dedicated routes for dermatologists
+            ══════════════════════════════════════════════════════════ */}
+            <Route path="/dermatologist/dashboard" element={
+              <ProtectedRoute allowedRoles={['DERMATOLOGIST', 'ADMIN']}>
+                <DermatologistDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* ══════════════════════════════════════════════════════════
                 PUBLIC SITE — Shared layout with global Navbar + Footer
             ══════════════════════════════════════════════════════════ */}
             <Route element={<PublicLayout />}>
@@ -114,6 +125,7 @@ function App() {
               <Route path="/admin" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminDashboardPage /></ProtectedRoute>} />
               <Route path="/admin/inventory" element={<ProtectedRoute allowedRoles={['ADMIN']}><InventoryManagementPage /></ProtectedRoute>} />
               <Route path="/admin/orders" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminOrdersPage /></ProtectedRoute>} />
+              <Route path="/admin/advertisements" element={<ProtectedRoute allowedRoles={['ADMIN']}><AdminAdvertisementsPage /></ProtectedRoute>} />
             </Route>
           </Routes>
         </Router>

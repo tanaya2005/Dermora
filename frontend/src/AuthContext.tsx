@@ -7,7 +7,7 @@ const API_URL = import.meta.env.PROD ? (import.meta.env.VITE_API_URL || "http://
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signup: (name: string, email: string, password: string, role?: "ADMIN" | "BUYER" | "SELLER") => Promise<{ data: any, error: any }>;
+  signup: (name: string, email: string, password: string, role?: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST") => Promise<{ data: any, error: any }>;
   login: (email: string, password: string) => Promise<{ data: any, error: any }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     name: string,
     email: string,
     password: string,
-    role: "ADMIN" | "BUYER" | "SELLER" = "BUYER"
+    role: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST" = "BUYER"
   ) => {
     try {
       const data = await apiRequest('/api/auth/signup', {
