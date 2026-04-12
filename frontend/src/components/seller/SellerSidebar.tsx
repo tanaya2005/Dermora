@@ -10,6 +10,7 @@ import {
   LogOut,
   Sparkles,
   X,
+  Star,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -23,6 +24,7 @@ const navItems = [
   { to: '/seller/products', icon: Package, label: 'Products' },
   { to: '/seller/products/add', icon: PlusCircle, label: 'Add Product' },
   { to: '/seller/orders', icon: ShoppingCart, label: 'Orders' },
+  { to: '/seller/reviews', icon: Star, label: 'Reviews' },
   { to: '/seller/analytics', icon: BarChart3, label: 'Analytics' },
   { to: '/seller/profile', icon: User, label: 'Profile' },
 ];

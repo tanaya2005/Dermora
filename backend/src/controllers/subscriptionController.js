@@ -49,18 +49,33 @@ export const createSubscriptionOrder = async (req, res, next) => {
       return res.status(400).json({ error: 'Invalid plan. Choose: individual, couple, family' });
     }
 
+    // Check if Razorpay is configured
+    if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+      console.error('Razorpay credentials not configured');
+      return res.status(500).json({ error: 'Payment gateway not configured. Please contact support.' });
+    }
+
     const razorpay = getRazorpay();
     const planDetails = PLANS[plan];
+
+    // Generate a short receipt ID (max 40 chars for Razorpay)
+    const timestamp = Date.now().toString().slice(-8); // Last 8 digits
+    const userIdShort = req.user.id.toString().slice(-8); // Last 8 chars of user ID
+    const receipt = `sub_${userIdShort}_${timestamp}`;
+
+    console.log('Creating Razorpay order:', { plan, amount: planDetails.priceInPaise, receipt });
 
     const order = await razorpay.orders.create({
       amount: planDetails.priceInPaise,
       currency: 'INR',
-      receipt: `sub_${req.user.id}_${Date.now()}`,
+      receipt,
       notes: {
         userId: req.user.id.toString(),
         plan,
       },
     });
+
+    console.log('Razorpay order created successfully:', order.id);
 
     res.json({
       orderId: order.id,
@@ -71,7 +86,11 @@ export const createSubscriptionOrder = async (req, res, next) => {
       planDetails,
     });
   } catch (error) {
-    next(error);
+    console.error('Error creating subscription order:', error);
+    res.status(500).json({ 
+      error: error.message || 'Failed to create subscription order',
+      details: error.error?.description || 'Please try again or contact support'
+    });
   }
 };
 

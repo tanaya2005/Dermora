@@ -7,7 +7,22 @@ const API_URL = import.meta.env.PROD ? (import.meta.env.VITE_API_URL || "http://
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signup: (name: string, email: string, password: string, role?: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST") => Promise<{ data: any, error: any }>;
+  signup: (
+    name: string, 
+    email: string, 
+    password: string, 
+    role?: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST",
+    sellerData?: {
+      phone: string;
+      address: string;
+      bankAccount: {
+        accountNumber: string;
+        ifscCode: string;
+        accountHolderName: string;
+        bankName: string;
+      };
+    }
+  ) => Promise<{ data: any, error: any }>;
   login: (email: string, password: string) => Promise<{ data: any, error: any }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
@@ -31,9 +46,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
     const token = getToken();
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
       ...(options.headers as Record<string, string>),
     };
+
+    // Only set Content-Type if body is not FormData
+    if (!(options.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
 
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -76,12 +95,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     name: string,
     email: string,
     password: string,
-    role: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST" = "BUYER"
+    role: "ADMIN" | "BUYER" | "SELLER" | "DERMATOLOGIST" = "BUYER",
+    sellerData?: {
+      phone: string;
+      address: string;
+      bankAccount: {
+        accountNumber: string;
+        ifscCode: string;
+        accountHolderName: string;
+        bankName: string;
+      };
+    }
   ) => {
     try {
+      const payload: any = { name, email, password, role };
+      
+      // Add seller data if provided
+      if (sellerData) {
+        payload.phone = sellerData.phone;
+        payload.address = sellerData.address;
+        payload.bankAccount = sellerData.bankAccount;
+      }
+
       const data = await apiRequest('/api/auth/signup', {
         method: 'POST',
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify(payload),
       });
 
       if (data.token) {

@@ -99,6 +99,24 @@ export async function removeFromCart(itemId: string) {
   });
 }
 
+// Wishlist API
+export async function addToWishlist(productId: string) {
+  return apiRequest("/api/wishlist/add", {
+    method: "POST",
+    body: JSON.stringify({ productId }),
+  });
+}
+
+export async function getWishlist() {
+  return apiRequest("/api/wishlist");
+}
+
+export async function removeFromWishlist(itemId: string) {
+  return apiRequest(`/api/wishlist/${itemId}`, {
+    method: "DELETE",
+  });
+}
+
 // Order API
 export async function createOrder(items: Array<{ productId: string; quantity: number }>) {
   return apiRequest("/api/orders/create", {
@@ -154,3 +172,62 @@ export const apiClient = {
     method: "DELETE",
   }),
 };
+
+// Review API - These functions should be used with the authenticated apiRequest from useAuth
+export async function createReview(data: {
+  productId: string;
+  rating: number;
+  comment: string;
+}, apiRequest: (endpoint: string, options?: RequestInit) => Promise<any>) {
+  return apiRequest("/api/reviews", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getProductReviews(productId: string, params?: {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+}) {
+  const query = new URLSearchParams();
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        query.append(key, value.toString());
+      }
+    });
+  }
+  
+  const endpoint = `/api/reviews/products/${productId}${query.toString() ? `?${query.toString()}` : ''}`;
+  return apiRequest(endpoint);
+}
+
+export async function getUserReviews(params?: {
+  page?: number;
+  limit?: number;
+}) {
+  const query = new URLSearchParams();
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        query.append(key, value.toString());
+      }
+    });
+  }
+  
+  return apiRequest(`/api/reviews/user/my-reviews?${query.toString()}`);
+}
+
+export async function getPendingReviews(apiRequest: (endpoint: string, options?: RequestInit) => Promise<any>) {
+  return apiRequest("/api/reviews/user/pending");
+}
+
+export async function getSellerReviewsDashboard(apiRequest: (endpoint: string, options?: RequestInit) => Promise<any>) {
+  return apiRequest("/api/reviews/seller/dashboard");
+}
+
+export async function getAdminReviewsDashboard(apiRequest: (endpoint: string, options?: RequestInit) => Promise<any>) {
+  return apiRequest("/api/reviews/admin/dashboard");
+}

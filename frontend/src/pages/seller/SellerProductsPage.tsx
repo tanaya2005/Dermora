@@ -9,7 +9,7 @@ import {
   Filter,
   ChevronDown,
 } from 'lucide-react';
-import { getProducts, deleteProduct } from '../../lib/api-client';
+import { getProducts } from '../../lib/api-client';
 import { useAuth } from '../../hooks/useAuth';
 
 interface Product {
@@ -41,8 +41,8 @@ const categoryColors: Record<string, string> = {
 };
 
 const SellerProductsPage: React.FC = () => {
-  const { user } = useAuth();
-  const [products, setProducts] = useState<Product[]>(mockProducts);
+  const { user, apiRequest } = useAuth();
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [loading, setLoading] = useState(false);
@@ -54,16 +54,23 @@ const SellerProductsPage: React.FC = () => {
       try {
         const data = await getProducts();
         const sellerProducts = data.products?.filter(
-          (p: any) => p.sellerId?.id === user?.id
+          (p: any) => {
+            const sellerIdValue = p.sellerId?._id || p.sellerId?.id || p.sellerId;
+            const userIdValue = user?.id || user?._id;
+            return sellerIdValue?.toString() === userIdValue?.toString();
+          }
         ) || [];
-        if (sellerProducts.length > 0) setProducts(sellerProducts);
-      } catch {
-        // Use mock data
+        setProducts(sellerProducts.length > 0 ? sellerProducts : []);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     };
-    load();
+    if (user?.id || user?._id) {
+      load();
+    }
   }, [user]);
 
   const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
@@ -77,7 +84,9 @@ const SellerProductsPage: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteProduct(id);
+      await apiRequest(`/api/products/${id}`, {
+        method: 'DELETE',
+      });
       setProducts(prev => prev.filter(p => p._id !== id));
     } catch {
       setProducts(prev => prev.filter(p => p._id !== id));

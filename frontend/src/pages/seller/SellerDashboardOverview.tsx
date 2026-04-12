@@ -62,33 +62,35 @@ const mockOrders = [
 ];
 
 const SellerDashboardOverview: React.FC = () => {
-  const { user } = useAuth();
-  const [products, setProducts] = useState<any[]>([]);
-  const [orders] = useState(mockOrders);
+  const { user, apiRequest } = useAuth();
+  const [dashboardData, setDashboardData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const load = async () => {
+    const fetchDashboard = async () => {
       try {
-        const data = await getProducts();
-        const sellerProducts = data.products?.filter(
-          (p: any) => p.sellerId?.id === user?.id
-        ) || [];
-        setProducts(sellerProducts);
-      } catch {
-        setProducts([]);
+        setLoading(true);
+        const data = await apiRequest('/api/seller/dashboard');
+        setDashboardData(data);
+      } catch (error) {
+        console.error('Error fetching dashboard:', error);
       } finally {
         setLoading(false);
       }
     };
-    load();
-  }, [user]);
+    fetchDashboard();
+  }, []);
 
-  const revenue = orders
-    .filter(o => o.status === 'DELIVERED')
-    .reduce((sum, o) => sum + o.amount, 0);
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
-  const completedOrders = orders.filter(o => o.status === 'DELIVERED').length;
+  const stats = dashboardData?.stats || {};
+  const recentOrders = dashboardData?.recentOrders || [];
 
   return (
     <div className="space-y-7 animate-fade-in">
@@ -122,7 +124,7 @@ const SellerDashboardOverview: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
         <StatCard
           title="Total Products"
-          value={loading ? '...' : products.length}
+          value={stats.totalProducts || 0}
           change="12%"
           positive
           icon={<Package className="w-6 h-6" />}
@@ -131,7 +133,7 @@ const SellerDashboardOverview: React.FC = () => {
         />
         <StatCard
           title="Total Orders"
-          value={orders.length}
+          value={stats.totalOrders || 0}
           change="8%"
           positive
           icon={<ShoppingCart className="w-6 h-6" />}
@@ -140,7 +142,7 @@ const SellerDashboardOverview: React.FC = () => {
         />
         <StatCard
           title="Revenue"
-          value={`₹${revenue.toLocaleString('en-IN')}`}
+          value={`₹${(stats.totalRevenue || 0).toLocaleString('en-IN')}`}
           change="5%"
           positive
           icon={<TrendingUp className="w-6 h-6" />}
@@ -149,7 +151,7 @@ const SellerDashboardOverview: React.FC = () => {
         />
         <StatCard
           title="Completed Orders"
-          value={completedOrders}
+          value={stats.completedOrders || 0}
           change="2%"
           positive={false}
           icon={<ShoppingCart className="w-6 h-6" />}
@@ -183,23 +185,33 @@ const SellerDashboardOverview: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
-              {orders.slice(0, 5).map((order) => {
-                const status = statusConfig[order.status] || statusConfig.PENDING;
-                return (
-                  <tr key={order.id} className="hover:bg-pink-50/30 dark:hover:bg-slate-700/30 transition-colors">
-                    <td className="px-6 py-4 font-medium text-primary">{order.id}</td>
-                    <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{order.buyer}</td>
-                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden sm:table-cell">{order.items} items</td>
-                    <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">₹{order.amount.toLocaleString('en-IN')}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${status.classes}`}>
-                        {status.label}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden md:table-cell">{order.date}</td>
-                  </tr>
-                );
-              })}
+              {recentOrders.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    No orders yet
+                  </td>
+                </tr>
+              ) : (
+                recentOrders.map((order: any) => {
+                  const status = statusConfig[order.status] || statusConfig.PENDING;
+                  return (
+                    <tr key={order._id} className="hover:bg-pink-50/30 dark:hover:bg-slate-700/30 transition-colors">
+                      <td className="px-6 py-4 font-medium text-primary">#{order.orderNumber}</td>
+                      <td className="px-6 py-4 text-gray-800 dark:text-gray-200">{order.buyerId?.name || 'N/A'}</td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden sm:table-cell">{order.orderItems?.length || 0} items</td>
+                      <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">₹{(order.totalAmount || 0).toLocaleString('en-IN')}</td>
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${status.classes}`}>
+                          {status.label}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden md:table-cell">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
@@ -230,7 +242,7 @@ const SellerDashboardOverview: React.FC = () => {
           </div>
           <div>
             <p className="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">View Orders</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{orders.filter(o => o.status === 'PENDING').length} orders pending</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{stats.pendingOrders || 0} orders pending</p>
           </div>
           <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-primary ml-auto transition-colors" />
         </Link>

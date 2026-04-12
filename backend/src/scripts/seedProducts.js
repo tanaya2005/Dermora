@@ -550,25 +550,29 @@ async function seedProducts() {
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('✅ Connected to MongoDB');
 
-    let seller = await User.findOne({ role: 'SELLER' });
+    // Find seller@gmail.com user
+    let seller = await User.findOne({ email: 'seller@gmail.com' });
 
     if (!seller) {
+      console.log('⚠️  seller@gmail.com not found. Creating it...');
       const { hashPassword } = await import('../utils/hash.js');
-      const hashedPassword = await hashPassword('seller123');
+      const hashedPassword = await hashPassword('password123');
 
       seller = await User.create({
-        name: 'Dermora Store',
-        email: 'seller@dermora.com',
+        name: 'Seller User',
+        email: 'seller@gmail.com',
         password: hashedPassword,
         role: 'SELLER',
         emailVerified: true
       });
 
-      console.log('✅ Default seller created');
+      console.log('✅ seller@gmail.com created');
+    } else {
+      console.log('✅ Found seller@gmail.com:', seller.name);
     }
 
-    await Product.deleteMany({});
-    console.log('🗑️ Cleared existing products');
+    // Don't delete all products, only add new ones for this seller
+    console.log('📦 Adding products for seller@gmail.com...');
 
     const productsWithSeller = products.map(product => ({
       ...product,
@@ -577,7 +581,12 @@ async function seedProducts() {
 
     const insertedProducts = await Product.insertMany(productsWithSeller);
 
-    console.log(`✅ Added ${insertedProducts.length} products`);
+    console.log(`✅ Added ${insertedProducts.length} products for ${seller.email}`);
+    console.log('\n📦 Sample products:');
+    insertedProducts.slice(0, 5).forEach((product, index) => {
+      console.log(`${index + 1}. ${product.title} - ₹${product.price}`);
+    });
+    
     process.exit(0);
   } catch (error) {
     console.error('❌ Error:', error);

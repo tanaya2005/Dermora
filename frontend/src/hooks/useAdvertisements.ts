@@ -22,7 +22,7 @@ export const useAdvertisements = (userType: 'guest' | 'signed_in' = 'guest') => 
     const fetchAds = async () => {
       try {
         setIsLoading(true);
-        const response = await apiClient.get(`/advertisements/active?userType=${userType}`);
+        const response = await apiClient.get(`/api/advertisements/active?userType=${userType}`);
         
         if (response.data.success) {
           setAdvertisements(response.data.data);
@@ -41,7 +41,7 @@ export const useAdvertisements = (userType: 'guest' | 'signed_in' = 'guest') => 
   // Record impression
   const recordImpression = async (adId: string) => {
     try {
-      await apiClient.post(`/advertisements/${adId}/impression`);
+      await apiClient.post(`/api/advertisements/${adId}/impression`);
     } catch (err) {
       console.error('Error recording impression:', err);
     }
@@ -50,7 +50,7 @@ export const useAdvertisements = (userType: 'guest' | 'signed_in' = 'guest') => 
   // Record click
   const recordClick = async (adId: string) => {
     try {
-      await apiClient.post(`/advertisements/${adId}/click`);
+      await apiClient.post(`/api/advertisements/${adId}/click`);
     } catch (err) {
       console.error('Error recording click:', err);
     }

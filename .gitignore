@@ -114,3 +114,48 @@ pids
 # Temporary folders
 tmp/
 temp/
+
+# ==========================================
+# PROJECT SPECIFIC IGNORES for pushing to github 
+# ==========================================
+
+# Documentation files (generated during development)
+*.md
+!README.md
+backend/docs/
+ADMIN_DASHBOARD_UPDATES.md
+ADMIN_REVIEWS_DASHBOARD_IMPLEMENTATION.md
+CRM_REVIEW_SYSTEM_IMPLEMENTATION.md
+DEPLOYMENT_GUIDE.md
+FEATURES.md
+QUICK_START_REVIEWS.md
+TROUBLESHOOTING.md
+VERCEL_DEPLOYMENT.md
+
+# Static data files (used for development/demo)
+frontend/src/data/
+frontend/src/data/*.ts
+frontend/src/data/*.js
+
+# Old/unused components with static data
+frontend/src/components/AdminReviewsDashboard.tsx
+frontend/src/components/ReviewAnalytics.tsx
+
+# Development scripts and test files
+test-*.js
+check-products.js
+replace_currency*.js
+setup-deployment.js
+start-dev.bat
+start-dev.sh
+
+# Kiro AI assistant files
+.kiro/
+.kiro/**/*
+
+# Uploaded files (should not be in git)
+backend/public/uploads/
+frontend/public/uploads/
+
+# Vercel deployment config (contains sensitive info)
+vercel.json

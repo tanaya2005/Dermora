@@ -48,6 +48,30 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  // Review and Rating System
+  averageRating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5,
+  },
+  totalReviews: {
+    type: Number,
+    default: 0,
+  },
+  negativePercentage: {
+    type: Number,
+    default: 0,
+  },
+  status: {
+    type: String,
+    enum: ['healthy', 'warning', 'critical'],
+    default: 'healthy',
+  },
+  healthScore: {
+    type: Number,
+    default: 0,
+  },
 }, {
   timestamps: true,
 });

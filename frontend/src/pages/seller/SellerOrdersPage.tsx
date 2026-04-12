@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Search,
   Filter,
@@ -6,18 +7,33 @@ import {
   Eye,
   ShoppingBag,
 } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
-// Mock orders data
-const mockOrders = [
-  { id: 'ORD-2026-001', buyer: 'Priya Sharma', email: 'priya@example.com', amount: 1299, status: 'DELIVERED', date: '2026-03-15', items: ['Hydra-Glow Serum', 'SPF 50 Sunscreen'], payment: 'Razorpay' },
-  { id: 'ORD-2026-002', buyer: 'Ananya Verma', email: 'ananya@example.com', amount: 849, status: 'PENDING', date: '2026-03-16', items: ['Gentle Foam Cleanser'], payment: 'UPI' },
-  { id: 'ORD-2026-003', buyer: 'Meera Nair', email: 'meera@example.com', amount: 2150, status: 'PROCESSING', date: '2026-03-16', items: ['Retinol Night Cream', 'Niacinamide Toner', 'AHA/BHA Exfoliant'], payment: 'Credit Card' },
-  { id: 'ORD-2026-004', buyer: 'Kavita Joshi', email: 'kavita@example.com', amount: 599, status: 'SHIPPED', date: '2026-03-17', items: ['Niacinamide Toner'], payment: 'Debit Card' },
-  { id: 'ORD-2026-005', buyer: 'Sunita Rao', email: 'sunita@example.com', amount: 3400, status: 'CANCELLED', date: '2026-03-17', items: ['AHA/BHA Exfoliant', 'Retinol Night Cream', 'Hydra-Glow Serum', 'SPF 50 Sunscreen'], payment: 'Razorpay' },
-  { id: 'ORD-2026-006', buyer: 'Divya Patel', email: 'divya@example.com', amount: 1598, status: 'DELIVERED', date: '2026-03-14', items: ['Hydra-Glow Serum', 'Gentle Foam Cleanser'], payment: 'UPI' },
-  { id: 'ORD-2026-007', buyer: 'Ritu Singh', email: 'ritu@example.com', amount: 999, status: 'PENDING', date: '2026-03-18', items: ['AHA/BHA Exfoliant'], payment: 'Razorpay' },
-  { id: 'ORD-2026-008', buyer: 'Pooja Mehta', email: 'pooja@example.com', amount: 2648, status: 'PROCESSING', date: '2026-03-18', items: ['Retinol Night Cream', 'SPF 50 Sunscreen'], payment: 'Credit Card' },
-];
+interface OrderItem {
+  productId: {
+    _id: string;
+    title: string;
+    imageUrl: string;
+  };
+  quantity: number;
+  price: number;
+}
+
+interface Order {
+  _id: string;
+  orderNumber: string;
+  buyerId: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  orderItems: OrderItem[];
+  totalAmount: number;
+  status: string;
+  paymentStatus: string;
+  trackingNumber?: string;
+  createdAt: string;
+}
 
 const statusConfig: Record<string, { label: string; classes: string; dot: string }> = {
   PENDING: { label: 'Pending', classes: 'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300', dot: 'bg-amber-400' },
@@ -28,26 +44,77 @@ const statusConfig: Record<string, { label: string; classes: string; dot: string
 };
 
 const SellerOrdersPage: React.FC = () => {
+  const { apiRequest } = useAuth();
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [selectedOrder, setSelectedOrder] = useState<typeof mockOrders[0] | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const statuses = ['All', 'PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 
-  const filtered = mockOrders.filter(o => {
-    const matchSearch = o.id.toLowerCase().includes(search.toLowerCase()) ||
-      o.buyer.toLowerCase().includes(search.toLowerCase());
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      setLoading(true);
+      const response = await apiRequest('/api/orders/seller');
+      console.log('=== RAW API RESPONSE ===');
+      console.log('Full response:', JSON.stringify(response, null, 2));
+      console.log('Orders array:', response.orders);
+      
+      if (response.orders && Array.isArray(response.orders)) {
+        console.log(`Setting ${response.orders.length} orders`);
+        response.orders.forEach((order, idx) => {
+          console.log(`Order ${idx}:`, {
+            id: order._id,
+            orderNumber: order.orderNumber,
+            itemsCount: order.orderItems?.length || 0,
+            totalAmount: order.totalAmount || 0,
+            orderItems: order.orderItems
+          });
+        });
+        setOrders(response.orders);
+      } else {
+        console.error('Invalid response format:', response);
+        setOrders([]);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      alert(`Failed to fetch orders: ${error}`);
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = orders.filter(o => {
+    const matchSearch = 
+      o.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
+      o.buyerId?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      o.buyerId?.email?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'All' || o.status === statusFilter;
     return matchSearch && matchStatus;
   });
 
   // Summary counts
   const counts = {
-    total: mockOrders.length,
-    pending: mockOrders.filter(o => o.status === 'PENDING').length,
-    processing: mockOrders.filter(o => o.status === 'PROCESSING').length,
-    delivered: mockOrders.filter(o => o.status === 'DELIVERED').length,
+    total: orders.length,
+    pending: orders.filter(o => o.status === 'PENDING').length,
+    processing: orders.filter(o => o.status === 'PROCESSING').length,
+    delivered: orders.filter(o => o.status === 'DELIVERED').length,
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -115,31 +182,34 @@ const SellerOrdersPage: React.FC = () => {
               <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
                 {filtered.map(order => {
                   const status = statusConfig[order.status];
+                  console.log('Rendering order:', order._id, 'Items:', order.orderItems?.length, 'Amount:', order.totalAmount);
                   return (
-                    <tr key={order.id} className="hover:bg-pink-50/30 dark:hover:bg-slate-700/20 transition-colors">
-                      <td className="px-6 py-4 font-medium text-primary">{order.id}</td>
+                    <tr key={order._id} className="hover:bg-pink-50/30 dark:hover:bg-slate-700/20 transition-colors">
+                      <td className="px-6 py-4 font-medium text-primary">#{order.orderNumber}</td>
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-medium text-gray-900 dark:text-white">{order.buyer}</p>
-                          <p className="text-xs text-gray-400">{order.email}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{order.buyerId?.name || 'N/A'}</p>
+                          <p className="text-xs text-gray-400">{order.buyerId?.email || 'N/A'}</p>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden sm:table-cell">
-                        {order.items.length} item{order.items.length !== 1 && 's'}
+                        {order.orderItems?.length || 0} item{(order.orderItems?.length || 0) !== 1 && 's'}
                       </td>
                       <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">
-                        ₹{order.amount.toLocaleString('en-IN')}
+                        ₹{(order.totalAmount || 0).toLocaleString('en-IN')}
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status.classes}`}>
-                          <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} />
-                          {status.label}
+                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${status?.classes || 'bg-gray-100 text-gray-700'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${status?.dot || 'bg-gray-400'}`} />
+                          {status?.label || order.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden md:table-cell">{order.date}</td>
+                      <td className="px-6 py-4 text-gray-500 dark:text-gray-400 hidden md:table-cell">
+                        {new Date(order.createdAt).toLocaleDateString()}
+                      </td>
                       <td className="px-6 py-4 text-right">
                         <button
-                          onClick={() => setSelectedOrder(order)}
+                          onClick={() => navigate(`/seller/orders/${order._id}`)}
                           className="w-8 h-8 rounded-lg bg-pink-50 dark:bg-pink-900/20 text-primary flex items-center justify-center hover:bg-pink-100 transition-colors ml-auto"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -160,8 +230,8 @@ const SellerOrdersPage: React.FC = () => {
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
             <div className="flex items-start justify-between">
               <div>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{selectedOrder.id}</h3>
-                <p className="text-sm text-gray-500">{selectedOrder.date}</p>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">#{selectedOrder.orderNumber}</h3>
+                <p className="text-sm text-gray-500">{new Date(selectedOrder.createdAt).toLocaleDateString()}</p>
               </div>
               <button
                 onClick={() => setSelectedOrder(null)}
@@ -174,16 +244,24 @@ const SellerOrdersPage: React.FC = () => {
             <div className="space-y-3 text-sm">
               <div className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-700">
                 <span className="text-gray-500">Buyer</span>
-                <span className="font-medium text-gray-900 dark:text-white">{selectedOrder.buyer}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{selectedOrder.buyerId.name}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-700">
                 <span className="text-gray-500">Email</span>
-                <span className="font-medium text-gray-900 dark:text-white">{selectedOrder.email}</span>
+                <span className="font-medium text-gray-900 dark:text-white">{selectedOrder.buyerId.email}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-700">
                 <span className="text-gray-500">Payment</span>
-                <span className="font-medium text-gray-900 dark:text-white">{selectedOrder.payment}</span>
+                <span className={`font-medium ${selectedOrder.paymentStatus === 'completed' ? 'text-green-600' : 'text-amber-600'}`}>
+                  {selectedOrder.paymentStatus}
+                </span>
               </div>
+              {selectedOrder.trackingNumber && (
+                <div className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-700">
+                  <span className="text-gray-500">Tracking</span>
+                  <span className="font-mono font-medium text-gray-900 dark:text-white">{selectedOrder.trackingNumber}</span>
+                </div>
+              )}
               <div className="flex justify-between py-2 border-b border-gray-100 dark:border-slate-700">
                 <span className="text-gray-500">Status</span>
                 <span className={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig[selectedOrder.status].classes}`}>
@@ -192,18 +270,26 @@ const SellerOrdersPage: React.FC = () => {
               </div>
               <div className="py-2 border-b border-gray-100 dark:border-slate-700">
                 <span className="text-gray-500 block mb-2">Items</span>
-                <ul className="space-y-1">
-                  {selectedOrder.items.map(item => (
-                    <li key={item} className="text-gray-900 dark:text-white font-medium flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                      {item}
+                <ul className="space-y-2">
+                  {selectedOrder.orderItems.map((item, index) => (
+                    <li key={index} className="flex items-center gap-3">
+                      <img 
+                        src={item.productId.imageUrl || 'https://placehold.co/40x40'} 
+                        alt={item.productId.title}
+                        className="w-10 h-10 rounded-lg object-cover"
+                      />
+                      <div className="flex-1">
+                        <p className="text-gray-900 dark:text-white font-medium text-xs">{item.productId.title}</p>
+                        <p className="text-gray-500 text-xs">Qty: {item.quantity}</p>
+                      </div>
+                      <span className="font-medium text-gray-900 dark:text-white text-sm">₹{item.price.toLocaleString()}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="flex justify-between pt-1">
                 <span className="text-gray-500 font-medium">Total Amount</span>
-                <span className="font-bold text-lg text-gray-900 dark:text-white">₹{selectedOrder.amount.toLocaleString('en-IN')}</span>
+                <span className="font-bold text-lg text-gray-900 dark:text-white">₹{selectedOrder.totalAmount.toLocaleString('en-IN')}</span>
               </div>
             </div>
 

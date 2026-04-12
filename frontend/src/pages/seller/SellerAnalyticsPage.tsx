@@ -72,7 +72,7 @@ const SellerAnalyticsPage: React.FC = () => {
   React.useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const data = await apiRequest('/api/analytics/seller');
+        const data = await apiRequest('/api/seller/analytics');
         setAnalytics(data);
       } catch (error) {
         console.error('Failed to fetch analytics:', error);
@@ -91,9 +91,18 @@ const SellerAnalyticsPage: React.FC = () => {
     );
   }
 
-  if (!analytics) return <div>No data available</div>;
+  if (!analytics) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-gray-500 dark:text-gray-400">No analytics data available</p>
+          <p className="text-sm text-gray-400 mt-2">Start selling products to see your analytics</p>
+        </div>
+      </div>
+    );
+  }
 
-  const { summary, topProducts } = analytics;
+  const { summary, monthlyRevenue = [], topProducts, categoryData = [] } = analytics;
 
   return (
     <div className="space-y-7">
@@ -102,25 +111,25 @@ const SellerAnalyticsPage: React.FC = () => {
         {[
           {
             label: 'Total Searches',
-            value: summary.totalSearches,
+            value: summary?.totalSearches || 0,
             icon: <ArrowUpRight className="w-5 h-5 text-emerald-600" />,
             bg: 'bg-emerald-100 dark:bg-emerald-900/30',
           },
           {
             label: 'Total Clicks',
-            value: summary.totalClicks,
+            value: summary?.totalClicks || 0,
             icon: <TrendingUp className="w-5 h-5 text-blue-600" />,
             bg: 'bg-blue-100 dark:bg-blue-900/30',
           },
           {
             label: 'Add to Cart',
-            value: summary.totalAddToCart,
+            value: summary?.totalAddToCart || 0,
             icon: <Package className="w-5 h-5 text-primary" />,
             bg: 'bg-pink-100 dark:bg-pink-900/30',
           },
           {
             label: 'Total Purchases',
-            value: summary.totalPurchases,
+            value: summary?.totalPurchases || 0,
             icon: <ShoppingBag className="w-5 h-5 text-emerald-600" />,
             bg: 'bg-emerald-100 dark:bg-emerald-900/30',
           },
@@ -145,23 +154,29 @@ const SellerAnalyticsPage: React.FC = () => {
             <p className="text-sm text-gray-400">Monthly revenue for the past 6 months</p>
           </div>
         </div>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={monthlyRevenue} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
-              <defs>
-                <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#d4567a" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#d4567a" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f5d5e0" strokeOpacity={0.5} />
-              <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
-              <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="revenue" stroke="#d4567a" strokeWidth={2.5} fill="url(#revenueGrad)" dot={{ fill: '#d4567a', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, fill: '#b8405f' }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
+        {monthlyRevenue.length > 0 ? (
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={monthlyRevenue} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                <defs>
+                  <linearGradient id="revenueGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#d4567a" stopOpacity={0.25} />
+                    <stop offset="95%" stopColor="#d4567a" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f5d5e0" strokeOpacity={0.5} />
+                <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="revenue" stroke="#d4567a" strokeWidth={2.5} fill="url(#revenueGrad)" dot={{ fill: '#d4567a', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, fill: '#b8405f' }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
+            No revenue data available yet
+          </div>
+        )}
       </div>
 
       {/* Orders Bar Chart + Pie */}
@@ -170,54 +185,68 @@ const SellerAnalyticsPage: React.FC = () => {
         <div className="lg:col-span-3 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-pink-100/50 dark:border-slate-700">
           <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Orders per Month</h3>
           <p className="text-sm text-gray-400 mb-5">Number of orders received each month</p>
-          <div className="h-56">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyRevenue} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f5d5e0" strokeOpacity={0.5} vertical={false} />
-                <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
-                <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="orders" fill="#d4567a" radius={[6, 6, 0, 0]} maxBarSize={48} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+          {monthlyRevenue.length > 0 ? (
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyRevenue} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f5d5e0" strokeOpacity={0.5} vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 12, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar dataKey="orders" fill="#d4567a" radius={[6, 6, 0, 0]} maxBarSize={48} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-56 flex items-center justify-center text-gray-400 text-sm">
+              No order data available yet
+            </div>
+          )}
         </div>
 
         {/* Category Pie */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-sm border border-pink-100/50 dark:border-slate-700">
           <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Sales by Category</h3>
           <p className="text-sm text-gray-400 mb-4">Revenue distribution across categories</p>
-          <div className="h-40 flex items-center justify-center">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={45}
-                  outerRadius={68}
-                  paddingAngle={3}
-                  dataKey="value"
-                >
-                  {categoryData.map((_, index) => (
-                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip formatter={(value: any) => [`${value}%`, 'Share']} />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-2 space-y-1.5">
-            {categoryData.map((item, i) => (
-              <div key={item.name} className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: COLORS[i] }} />
-                  <span className="text-gray-600 dark:text-gray-300">{item.name}</span>
-                </div>
-                <span className="font-medium text-gray-900 dark:text-white">{item.value}%</span>
+          {categoryData.length > 0 ? (
+            <>
+              <div className="h-40 flex items-center justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={45}
+                      outerRadius={68}
+                      paddingAngle={3}
+                      dataKey="value"
+                    >
+                      {categoryData.map((_, index) => (
+                        <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value: any) => [`${value}%`, 'Share']} />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            ))}
-          </div>
+              <div className="mt-2 space-y-1.5">
+                {categoryData.map((item, i) => (
+                  <div key={item.name} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: COLORS[i] }} />
+                      <span className="text-gray-600 dark:text-gray-300">{item.name}</span>
+                    </div>
+                    <span className="font-medium text-gray-900 dark:text-white">{item.value}%</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="h-40 flex items-center justify-center text-gray-400 text-sm">
+              No category data available
+            </div>
+          )}
         </div>
       </div>
 
@@ -256,23 +285,24 @@ const SellerAnalyticsPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-700/50">
-              {topProducts[activeTab].map((product: any) => (
-                <tr key={product._id} className="hover:bg-pink-50/20 dark:hover:bg-slate-700/20 transition-colors">
-                  <td className="px-6 py-3.5 font-medium text-gray-900 dark:text-white">
-                    <div className="flex items-center gap-3">
-                      {product.imageUrl && (
-                        <img src={product.imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded-lg" />
-                      )}
-                      <span>{product.title}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.searchCount || 0}</td>
-                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.clickCount || 0}</td>
-                  <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.addToCartCount || 0}</td>
-                  <td className="px-6 py-3.5 font-semibold text-gray-900 dark:text-white">{product.purchaseCount || 0}</td>
-                </tr>
-              ))}
-              {topProducts[activeTab].length === 0 && (
+              {topProducts && topProducts[activeTab] && topProducts[activeTab].length > 0 ? (
+                topProducts[activeTab].map((product: any) => (
+                  <tr key={product._id} className="hover:bg-pink-50/20 dark:hover:bg-slate-700/20 transition-colors">
+                    <td className="px-6 py-3.5 font-medium text-gray-900 dark:text-white">
+                      <div className="flex items-center gap-3">
+                        {product.imageUrl && (
+                          <img src={product.imageUrl} alt={product.title} className="w-10 h-10 object-cover rounded-lg" />
+                        )}
+                        <span>{product.title}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.searchCount || 0}</td>
+                    <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.clickCount || 0}</td>
+                    <td className="px-6 py-3.5 text-gray-600 dark:text-gray-300">{product.addToCartCount || 0}</td>
+                    <td className="px-6 py-3.5 font-semibold text-gray-900 dark:text-white">{product.purchaseCount || 0}</td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-gray-400">
                     No products found in this category

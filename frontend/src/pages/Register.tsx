@@ -9,6 +9,13 @@ export default function Register() {
     password: '',
     confirmPassword: '',
     role: 'BUYER' as 'BUYER' | 'SELLER' | 'ADMIN' | 'DERMATOLOGIST',
+    // Seller-specific fields
+    phone: '',
+    address: '',
+    accountNumber: '',
+    ifscCode: '',
+    accountHolderName: '',
+    bankName: '',
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,14 +47,35 @@ export default function Register() {
       return;
     }
 
+    // Seller-specific validation
+    if (formData.role === 'SELLER') {
+      if (!formData.phone || !formData.address || !formData.accountNumber || !formData.ifscCode || !formData.accountHolderName || !formData.bankName) {
+        setError('Please fill in all seller details including contact and bank information');
+        return;
+      }
+    }
+
     setLoading(true);
 
     try {
+      // Prepare seller data if role is SELLER
+      const sellerData = formData.role === 'SELLER' ? {
+        phone: formData.phone,
+        address: formData.address,
+        bankAccount: {
+          accountNumber: formData.accountNumber,
+          ifscCode: formData.ifscCode,
+          accountHolderName: formData.accountHolderName,
+          bankName: formData.bankName,
+        },
+      } : undefined;
+
       const { data, error } = await signup(
         formData.name,
         formData.email,
         formData.password,
-        formData.role
+        formData.role,
+        sellerData
       );
 
       if (error) {
@@ -193,6 +221,102 @@ export default function Register() {
               </button>
             </div>
           </div>
+
+          {/* Seller-specific fields */}
+          {formData.role === 'SELLER' && (
+            <>
+              <div className="pt-4 border-t border-slate-200">
+                <h3 className="text-sm font-bold text-slate-700 mb-4">📞 Contact Information</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Phone Number</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="+91 98765 43210"
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Business Address</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="123 Main Street, City, State"
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-slate-200">
+                <h3 className="text-sm font-bold text-slate-700 mb-4">🏦 Bank Account Details</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Account Holder Name</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="John Doe"
+                      type="text"
+                      name="accountHolderName"
+                      value={formData.accountHolderName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Account Number</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="1234567890"
+                      type="text"
+                      name="accountNumber"
+                      value={formData.accountNumber}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">IFSC Code</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="HDFC0001234"
+                      type="text"
+                      name="ifscCode"
+                      value={formData.ifscCode}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2 px-1">Bank Name</label>
+                    <input
+                      className="w-full h-12 bg-background-light border-none rounded-lg px-4 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary/20 transition-all"
+                      placeholder="HDFC Bank"
+                      type="text"
+                      name="bankName"
+                      value={formData.bankName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
           <button 
             type="submit"
             disabled={loading}

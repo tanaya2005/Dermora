@@ -124,6 +124,13 @@ export const AdminOrdersPage: React.FC = () => {
         {/* Header */}
         <div className="flex-shrink-0 p-6 pb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-primary/10 bg-white dark:bg-slate-900">
           <div>
+            <Link
+              to="/admin"
+              className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-xl border border-primary/15 bg-slate-50 dark:bg-slate-800 text-sm font-semibold text-primary hover:bg-primary/5 transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">arrow_back</span>
+              Back to Admin Dashboard
+            </Link>
             <h1 className="text-2xl font-black tracking-tight dark:text-white">Order Management</h1>
             <p className="text-sm text-slate-500">View, filter and update the status of all customer orders across Dermora.</p>
           </div>

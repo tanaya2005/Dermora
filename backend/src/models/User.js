@@ -27,6 +27,15 @@ const userSchema = new mongoose.Schema({
     default: 'BUYER',
   },
   profileImage: String,
+  // Seller Payment Information
+  phone: String,
+  address: String,
+  bankAccount: {
+    accountNumber: String,
+    ifscCode: String,
+    accountHolderName: String,
+    bankName: String,
+  },
   // Skin Assessment Data
   skinProfile: {
     skinType: {

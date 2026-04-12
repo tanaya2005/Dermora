@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import ListingFee from '../models/ListingFee.js';
 import { createProductSchema, updateProductSchema } from '../validators/index.js';
 
 /**
@@ -7,17 +8,52 @@ import { createProductSchema, updateProductSchema } from '../validators/index.js
  */
 export const createProduct = async (req, res, next) => {
   try {
-    const validatedData = createProductSchema.parse(req.body);
+    const { listingFeeId, ...productData } = req.body;
+    const validatedData = createProductSchema.parse(productData);
 
+    // Verify listing fee payment
+    if (!listingFeeId) {
+      return res.status(400).json({ error: 'Listing fee payment required' });
+    }
+
+    const listingFee = await ListingFee.findById(listingFeeId);
+
+    if (!listingFee) {
+      return res.status(404).json({ error: 'Listing fee record not found' });
+    }
+
+    if (listingFee.sellerId.toString() !== req.user.id.toString()) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    if (listingFee.status !== 'paid') {
+      return res.status(400).json({ error: 'Listing fee not paid' });
+    }
+
+    if (listingFee.productId) {
+      return res.status(400).json({ error: 'Listing fee already used for another product' });
+    }
+
+    // Create product
     const product = await Product.create({
       ...validatedData,
       sellerId: req.user.id,
     });
 
-    await product.populate('sellerId', 'id name email');
+    // Link listing fee to product
+    listingFee.productId = product._id;
+    await listingFee.save();
+
+    await product.populate('sellerId', '_id name email');
 
     res.status(201).json({ product });
   } catch (error) {
+    if (error.name === 'ZodError') {
+      return res.status(400).json({ 
+        error: 'Validation failed', 
+        details: error.errors.map(e => ({ field: e.path.join('.'), message: e.message }))
+      });
+    }
     next(error);
   }
 };
@@ -49,11 +85,12 @@ export const getProducts = async (req, res, next) => {
 
     const [products, total] = await Promise.all([
       Product.find(query)
+        .populate('sellerId', '_id name email')
+        .select('title description price stock category imageUrl averageRating totalReviews status sellerId')
+        .sort({ createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit))
-        .populate('sellerId', 'id name')
-        .sort({ createdAt: -1 }),
-      Product.countDocuments(query),
+        .limit(parseInt(limit)),
+      Product.countDocuments(query)
     ]);
 
     // Increment searchCount for all returned products if searching

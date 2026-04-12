@@ -8,7 +8,7 @@ import { generateToken } from '../utils/jwt.js';
  */
 export const signup = async (req, res, next) => {
   try {
-    const { name, email, password, role, profileImage } = req.body;
+    const { name, email, password, role, profileImage, phone, address, bankAccount } = req.body;
 
     // Validate required fields
     if (!name || !email || !password) {
@@ -18,11 +18,25 @@ export const signup = async (req, res, next) => {
     }
 
     // Validate role
-    const validRoles = ['ADMIN', 'SELLER', 'BUYER'];
+    const validRoles = ['ADMIN', 'SELLER', 'BUYER', 'DERMATOLOGIST'];
     if (role && !validRoles.includes(role)) {
       return res.status(400).json({ 
-        error: 'Invalid role. Must be ADMIN, SELLER, or BUYER' 
+        error: 'Invalid role. Must be ADMIN, SELLER, BUYER, or DERMATOLOGIST' 
       });
+    }
+
+    // Validate seller-specific fields
+    if (role === 'SELLER') {
+      if (!phone || !address || !bankAccount) {
+        return res.status(400).json({
+          error: 'Phone, address, and bank account details are required for sellers'
+        });
+      }
+      if (!bankAccount.accountNumber || !bankAccount.ifscCode || !bankAccount.accountHolderName || !bankAccount.bankName) {
+        return res.status(400).json({
+          error: 'Complete bank account details are required for sellers'
+        });
+      }
     }
 
     // Check if user already exists
@@ -34,14 +48,24 @@ export const signup = async (req, res, next) => {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create user
-    const user = await User.create({
+    // Create user data
+    const userData = {
       name,
       email,
       password: hashedPassword,
       role: role || 'BUYER',
       profileImage: profileImage || null,
-    });
+    };
+
+    // Add seller-specific data if role is SELLER
+    if (role === 'SELLER') {
+      userData.phone = phone;
+      userData.address = address;
+      userData.bankAccount = bankAccount;
+    }
+
+    // Create user
+    const user = await User.create(userData);
 
     // Generate token
     const token = generateToken({ userId: user._id, role: user.role });
@@ -55,6 +79,9 @@ export const signup = async (req, res, next) => {
       profileImage: user.profileImage,
       emailVerified: user.emailVerified,
       skinProfile: user.skinProfile,
+      phone: user.phone,
+      address: user.address,
+      bankAccount: user.bankAccount,
     };
 
     res.status(201).json({ user: userResponse, token });

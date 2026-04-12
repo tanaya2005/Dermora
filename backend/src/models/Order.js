@@ -27,6 +27,10 @@ const orderSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  orderNumber: {
+    type: String,
+    unique: true,
+  },
   totalAmount: {
     type: Number,
     required: true,
@@ -36,10 +40,41 @@ const orderSchema = new mongoose.Schema({
     enum: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'],
     default: 'PENDING',
   },
+  paymentStatus: {
+    type: String,
+    enum: ['pending', 'completed', 'failed'],
+    default: 'pending',
+  },
   paymentId: String,
+  trackingNumber: String,
+  shippingAddress: {
+    street: String,
+    city: String,
+    state: String,
+    pincode: String,
+  },
   orderItems: [orderItemSchema],
+  pendingReviews: [{
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+    },
+    reviewSubmitted: {
+      type: Boolean,
+      default: false,
+    },
+  }],
 }, {
   timestamps: true,
+});
+
+// Generate order number before saving
+orderSchema.pre('save', async function(next) {
+  if (!this.orderNumber) {
+    const count = await mongoose.model('Order').countDocuments();
+    this.orderNumber = `ORD${String(count + 1).padStart(6, '0')}`;
+  }
+  next();
 });
 
 orderSchema.index({ buyerId: 1 });

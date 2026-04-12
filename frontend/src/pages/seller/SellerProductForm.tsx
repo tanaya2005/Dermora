@@ -12,7 +12,9 @@ import {
   FileText,
   ChevronDown,
 } from 'lucide-react';
-import { createProduct, updateProduct, getProduct } from '../../lib/api-client';
+import { getProduct } from '../../lib/api-client';
+import { useAuth } from '../../hooks/useAuth';
+import ListingFeePaymentModal from '../../components/ListingFeePaymentModal';
 
 interface ProductForm {
   title: string;
@@ -32,6 +34,7 @@ interface SellerProductFormProps {
 const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false }) => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { apiRequest } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState<ProductForm>({
@@ -47,6 +50,8 @@ const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false })
   const [toast, setToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
   const [errors, setErrors] = useState<Partial<ProductForm>>({});
   const [dragging, setDragging] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [listingFeeId, setListingFeeId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isEdit && id) {
@@ -89,24 +94,35 @@ const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false })
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setLoading(true);
 
+    // For edit mode, skip payment
+    if (isEdit && id) {
+      await updateProductDirectly();
+      return;
+    }
+
+    // For new product, show payment modal
+    setShowPaymentModal(true);
+  };
+
+  const updateProductDirectly = async () => {
+    setLoading(true);
     const payload = {
       title: form.title,
       description: form.description,
       price: Number(form.price),
       stock: Number(form.stock),
       category: form.category,
-      imageUrl: form.imageUrl || imagePreview || undefined,
+      ...(form.imageUrl && { imageUrl: form.imageUrl }),
+      ...(imagePreview && !form.imageUrl && { imageUrl: imagePreview }),
     };
 
     try {
-      if (isEdit && id) {
-        await updateProduct(id, payload);
-      } else {
-        await createProduct(payload);
-      }
-      setToast({ type: 'success', msg: `Product ${isEdit ? 'updated' : 'created'} successfully!` });
+      await apiRequest(`/api/products/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(payload),
+      });
+      setToast({ type: 'success', msg: 'Product updated successfully!' });
       setTimeout(() => navigate('/seller/products'), 1500);
     } catch (err: any) {
       setToast({ type: 'error', msg: err.message || 'Something went wrong' });
@@ -115,7 +131,46 @@ const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false })
     }
   };
 
+  const handlePaymentSuccess = async (paymentData: any) => {
+    setLoading(true);
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      price: Number(form.price),
+      stock: Number(form.stock),
+      category: form.category,
+      listingFeeId: paymentData.listingFeeId,
+      ...(form.imageUrl && { imageUrl: form.imageUrl }),
+      ...(imagePreview && !form.imageUrl && { imageUrl: imagePreview }),
+    };
+
+    try {
+      await apiRequest('/api/products', {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      });
+      setToast({ type: 'success', msg: 'Product created successfully!' });
+      setTimeout(() => navigate('/seller/products'), 1500);
+    } catch (err: any) {
+      setToast({ type: 'error', msg: err.message || 'Failed to create product' });
+    } finally {
+      setLoading(false);
+      setShowPaymentModal(false);
+    }
+  };
+
   const handleImageFile = (file: File) => {
+    // Check file size (max 2MB for base64)
+    const maxSize = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSize) {
+      setToast({ 
+        type: 'error', 
+        msg: 'Image too large! Please use an image smaller than 2MB or paste an image URL instead.' 
+      });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result as string);
@@ -287,7 +342,7 @@ const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false })
               </div>
               <div className="text-center">
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Click or drag image here</p>
-                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP up to 5MB</p>
+                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG, WEBP up to 2MB</p>
               </div>
               <input
                 ref={fileInputRef}
@@ -362,6 +417,16 @@ const SellerProductForm: React.FC<SellerProductFormProps> = ({ isEdit = false })
           </button>
         </div>
       </form>
+
+      {/* Listing Fee Payment Modal */}
+      {showPaymentModal && (
+        <ListingFeePaymentModal
+          productPrice={Number(form.price)}
+          quantity={Number(form.stock)}
+          onSuccess={handlePaymentSuccess}
+          onCancel={() => setShowPaymentModal(false)}
+        />
+      )}
     </div>
   );
 };

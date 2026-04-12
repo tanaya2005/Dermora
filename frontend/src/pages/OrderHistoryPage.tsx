@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import PendingReviewsModal from "../components/PendingReviewsModal";
 
 export const OrderHistoryPage: React.FC = () => {
   const { apiRequest } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showPendingReviews, setShowPendingReviews] = useState(false);
+  const [pendingReviewsCount, setPendingReviewsCount] = useState(0);
 
   useEffect(() => {
     fetchOrders();
+    checkPendingReviews();
   }, []);
 
   const fetchOrders = async () => {
@@ -21,6 +25,21 @@ export const OrderHistoryPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const checkPendingReviews = async () => {
+    try {
+      const response = await apiRequest('/api/reviews/user/pending');
+      setPendingReviewsCount(response.pendingReviews.length);
+    } catch (err) {
+      console.error('Failed to check pending reviews:', err);
+    }
+  };
+
+  const handleReviewsCompleted = () => {
+    setPendingReviewsCount(0);
+    // Optionally refresh orders to update review status
+    fetchOrders();
   };
 
   if (loading) {
@@ -45,12 +64,34 @@ export const OrderHistoryPage: React.FC = () => {
                   <span className="material-symbols-outlined text-[10px]">chevron_right</span>
                   <span className="text-primary font-medium">Order History</span>
                 </nav>
-                <h1 className="font-serif text-4xl font-bold text-slate-900 dark:text-white">
-                  Order History
-                </h1>
-                <p className="text-slate-500 dark:text-slate-400">
-                  Manage your past purchases and track your deliveries.
-                </p>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <h1 className="font-serif text-4xl font-bold text-slate-900 dark:text-white">
+                      Order History
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400">
+                      Manage your past purchases and track your deliveries.
+                    </p>
+                  </div>
+                  {pendingReviewsCount > 0 && (
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => setShowPendingReviews(true)}
+                        className="flex items-center gap-2 bg-amber-100 text-amber-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-amber-200 transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">star</span>
+                        {pendingReviewsCount} Review{pendingReviewsCount !== 1 ? 's' : ''} Pending
+                      </button>
+                      <Link
+                        to="/reviews"
+                        className="flex items-center gap-2 border border-primary text-primary px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/10 transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">rate_review</span>
+                        My Reviews
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {orders.length === 0 ? (
@@ -130,10 +171,20 @@ export const OrderHistoryPage: React.FC = () => {
                               {order.status === 'DELIVERED' ? 'Delivered successfully.' : `Estimated Delivery: ${new Date(new Date(order.createdAt).getTime() + 4 * 24 * 60 * 60 * 1000).toLocaleDateString()}`}
                             </p>
                           </div>
-                          <button className="w-full md:w-auto border border-primary text-primary px-5 py-2 rounded-lg text-sm font-bold hover:bg-primary/10 transition-all flex items-center justify-center gap-1">
-                            {/* <span className="material-symbols-outlined text-sm">local_shipping</span> */}
-                            Reorder
-                          </button>
+                          <div className="flex gap-2">
+                            {order.status === 'DELIVERED' && (
+                              <button
+                                onClick={() => setShowPendingReviews(true)}
+                                className="flex items-center gap-1 bg-primary text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
+                              >
+                                <span className="material-symbols-outlined text-sm">star</span>
+                                Review Products
+                              </button>
+                            )}
+                            <button className="border border-primary text-primary px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/10 transition-all flex items-center justify-center gap-1">
+                              Reorder
+                            </button>
+                          </div>
                         </div>
                       )}
 
@@ -153,6 +204,13 @@ export const OrderHistoryPage: React.FC = () => {
           </main>
         </div>
       </div>
+      
+      {/* Pending Reviews Modal */}
+      <PendingReviewsModal
+        isOpen={showPendingReviews}
+        onClose={() => setShowPendingReviews(false)}
+        onAllReviewsCompleted={handleReviewsCompleted}
+      />
     </div>
   );
 };

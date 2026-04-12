@@ -73,6 +73,13 @@ export const AdminDashboardPage: React.FC = () => {
                   <span className="material-symbols-outlined">receipt_long</span>
                   <span className="text-sm font-medium">Orders</span>
                 </Link>
+                <Link
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-primary/10 hover:text-primary transition-all"
+                  to="/admin/reviews"
+                >
+                  <span className="material-symbols-outlined">star</span>
+                  <span className="text-sm font-medium">Reviews</span>
+                </Link>
               </nav>
             </div>
             <div className="flex flex-col gap-1">
