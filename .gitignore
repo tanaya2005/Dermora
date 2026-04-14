@@ -149,6 +149,19 @@ setup-deployment.js
 start-dev.bat
 start-dev.sh
 
+# Backend test and temporary scripts
+backend/test-*.js
+backend/check-*.js
+backend/find-*.js
+backend/src/scripts/updateProductImages.js
+backend/src/scripts/checkProductImages.js
+backend/src/scripts/removeDuplicateProducts.js
+backend/src/scripts/forceUpdateAllImages.js
+backend/src/scripts/fixProductImages.js
+backend/src/scripts/fixBabyCareImages.js
+backend/src/scripts/fixBabyCareWithDifferentImages.js
+backend/src/scripts/setCetaphilImageForAll.js
+
 # Kiro AI assistant files
 .kiro/
 .kiro/**/*
