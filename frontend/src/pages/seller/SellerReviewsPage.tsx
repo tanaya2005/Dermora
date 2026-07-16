@@ -269,7 +269,7 @@ export default function SellerReviewsPage() {
                 outerRadius={110}
                 paddingAngle={5}
                 dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
               >
                 {sentimentData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
@@ -321,7 +321,7 @@ export default function SellerReviewsPage() {
                   borderRadius: '8px',
                   padding: '8px'
                 }}
-                formatter={(value: any, name: string) => {
+                formatter={(value: any, name: any) => {
                   if (name === 'avgRating') return [value.toFixed(1), 'Avg Rating'];
                   return [value, name];
                 }}

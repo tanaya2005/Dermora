@@ -133,9 +133,9 @@ TROUBLESHOOTING.md
 VERCEL_DEPLOYMENT.md
 
 # Static data files (used for development/demo)
-frontend/src/data/
-frontend/src/data/*.ts
-frontend/src/data/*.js
+# frontend/src/data/
+# frontend/src/data/*.ts
+# frontend/src/data/*.js
 
 # Old/unused components with static data
 frontend/src/components/AdminReviewsDashboard.tsx

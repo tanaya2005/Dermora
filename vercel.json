@@ -1,7 +1,21 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://dermora.onrender.com/api/$1" },
-    { "source": "/(.*)", "destination": "/" }
+  "builds": [
+    {
+      "src": "backend/api/index.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist"
+      }
+    }
+  ],
+  "routes": [
+    { "source": "/api/(.*)", "dest": "backend/api/index.js" },
+    { "handle": "filesystem" },
+    { "source": "/(.*)", "dest": "/index.html" }
   ]
 }

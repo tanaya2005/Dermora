@@ -1,11 +1,12 @@
 import { createAuthClient } from "better-auth/client";
 
 export const authClient = createAuthClient({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
+  baseURL: import.meta.env.VITE_API_URL || (typeof window !== "undefined" ? window.location.origin : ""),
 });
 
 export interface User {
   id: string;
+  _id?: string;
   name: string;
   email: string;
   role: "ADMIN" | "SELLER" | "BUYER" | "DERMATOLOGIST";

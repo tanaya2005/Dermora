@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Star, AlertTriangle, MessageSquare, TrendingUp, TrendingDown } from 'lucide-react';
-import { getSellerReviewsDashboard } from '../lib/api-client';
+import { getSellerReviewsDashboard, apiRequest } from '../lib/api-client';
 
 interface SellerDashboardData {
   recentReviews: Array<{
@@ -45,7 +45,7 @@ export default function SellerReviewsDashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await getSellerReviewsDashboard();
+      const response = await getSellerReviewsDashboard(apiRequest);
       setData(response);
       setError('');
     } catch (err: any) {
